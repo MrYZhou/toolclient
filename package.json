@@ -1,0 +1,27 @@
+{
+  "name": "toolbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "electron ."
+  },
+  "config": {
+    "electron_mirror": "https://npmmirror.com/mirrors/electron/",
+    "electron_builder_binaries": "https://npmmirror.com/mirrors/electron-builder-binaries/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/lgpr/toolbox.git"
+  },
+  "keywords": [
+    "electron",
+    "vue3",
+    "tool"
+  ],
+  "author": "larry",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^18.0.0"
+  }
+}
