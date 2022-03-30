@@ -16,6 +16,10 @@
 
 1.  pnpm run dev 启动
 
+#### 参考文档
+https://cn.vitejs.dev/
+https://www.electronjs.org/zh/docs/latest
+https://v3.cn.vuejs.org/guide/introduction.html
 #### 参与贡献
 
 1.  Fork 本仓库
