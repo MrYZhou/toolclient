@@ -1,16 +1,16 @@
 {
   "name": "toolbox",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
     "electron:dev": "concurrently vite \"pnpm main:build\" \"electron .\"",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
-    "main:build":"tsc -p  src/main --outDir distMain",
-    "render:build":"vue-tsc --noEmit && vite build",
+    "main:build": "tsc -p  src/main --outDir distMain",
+    "render:build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview --open",
-    "package":"electron-builder"
+    "package": "electron-builder"
   },
   "config": {
     "electron_mirror": "https://npmmirror.com/mirrors/electron/",
@@ -21,34 +21,36 @@
     "url": "https://gitee.com/lgpr/toolbox.git"
   },
   "dependencies": {
-    "vue": "^3.2.25"
+    "pinia": "^2.0.13",
+    "vue": "^3.2.25",
+    "vue-router": "4"
   },
   "devDependencies": {
+    "@vicons/ionicons5": "^0.12.0",
+    "unplugin-vue-components": "^0.18.5",
+    "@vitejs/plugin-vue": "^2.2.0",
     "concurrently": "^7.0.0",
     "electron": "^18.0.0",
     "electron-builder": "^22.14.13",
-    "@vitejs/plugin-vue": "^2.2.0",
+    "eslint-plugin-vue": "^8.5.0",
+    "naive-ui": "^2.27.0",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
     "vue-tsc": "^0.29.8"
   },
   "build": {
-    "appId": "com.toolbox.app", 
-    
+    "appId": "com.toolbox.app",
     "win": {
       "target": [
         "nsis",
         "zip"
       ]
     },
-
-    "directories":{
-      "output":"electron"
+    "directories": {
+      "output": "electron"
     }
-   
   },
   "engines": {
     "node": ">=16"
   }
 }
-
