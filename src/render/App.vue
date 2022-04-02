@@ -1,8 +1,7 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div>my toolbox</div>
+    <router-view></router-view>
 </template>
 
 <style>
