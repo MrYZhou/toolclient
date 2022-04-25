@@ -1,12 +1,12 @@
 <template>
   <n-space vertical>
-    <n-space> <n-switch v-model:value="inverted" /> inverted </n-space>
+    <n-space> <n-switch v-model:value="inverted" /> 切换 </n-space>
     <n-layout>
       <n-layout-header :inverted="inverted" bordered>
-        Header Header Header
+        <!-- 头部局域 -->
         <n-menu mode="horizontal" :inverted="inverted" :options="menuOptions" />
       </n-layout-header>
-      <n-layout has-sider>
+      <n-layout has-sider v-if="false">
         <n-layout-sider
           bordered
           show-trigger
@@ -27,7 +27,7 @@
         <n-layout style="max-height: 320px" />
       </n-layout>
       <n-layout-footer :inverted="inverted" bordered>
-        Footer Footer Footer
+        <!-- 底部区域,可以放些网站信息等 -->
       </n-layout-footer>
     </n-layout>
   </n-space>
