@@ -1,9 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-    <router-view></router-view>
+  <div >
+    <n-message-provider>
+      <router-view></router-view>
+    </n-message-provider>
+  </div>
 </template>
 
-<style>
-
-</style>
+<style></style>

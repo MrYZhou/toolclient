@@ -23,11 +23,11 @@
   "dependencies": {
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
+    "vue-json-viewer": "3",
     "vue-router": "4"
   },
   "devDependencies": {
     "@vicons/ionicons5": "^0.12.0",
-    "unplugin-vue-components": "^0.18.5",
     "@vitejs/plugin-vue": "^2.2.0",
     "concurrently": "^7.0.0",
     "electron": "^18.0.0",
@@ -35,6 +35,7 @@
     "eslint-plugin-vue": "^8.5.0",
     "naive-ui": "^2.27.0",
     "typescript": "^4.5.4",
+    "unplugin-vue-components": "^0.18.5",
     "vite": "^2.8.0",
     "vue-tsc": "^0.29.8"
   },

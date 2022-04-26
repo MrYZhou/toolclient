@@ -1,132 +1,147 @@
 <template>
   <n-space vertical>
-    <n-space> <n-switch v-model:value="inverted" /> 切换 </n-space>
-    <n-layout>
-      <n-layout-header :inverted="inverted" bordered>
-        <!-- 头部局域 -->
-        <n-menu mode="horizontal" :inverted="inverted" :options="menuOptions" />
-      </n-layout-header>
-      <n-layout has-sider v-if="false">
-        <n-layout-sider
-          bordered
-          show-trigger
-          collapse-mode="width"
+    <!-- <n-switch v-model:value="collapsed" /> -->
+    <n-layout has-sider  >
+      <n-layout-sider
+      embedded 
+      content-style="padding: 24px;"
+      style="height:100vh"
+        bordered
+        collapse-mode="width"
+        :collapsed-width="64"
+        :width="240"
+        :collapsed="collapsed"
+        show-trigger
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+      >
+        <n-menu
+          accordion
+          :collapsed="collapsed"
           :collapsed-width="64"
-          :width="240"
-          :native-scrollbar="false"
-          :inverted="inverted"
-          style="max-height: 320px"
-        >
-          <n-menu
-            :inverted="inverted"
-            :collapsed-width="64"
-            :collapsed-icon-size="22"
-            :options="menuOptions"
-          />
-        </n-layout-sider>
-        <n-layout style="max-height: 320px" />
+          :collapsed-icon-size="22"
+          :options="menuOptions"
+          :render-label="renderMenuLabel"
+          :render-icon="renderMenuIcon"
+          :expand-icon="expandIcon"
+          @update:value="handleUpdateValue"
+        />
+      </n-layout-sider>
+      <n-layout content-style="padding: 24px;">
+        <component :is="componentName"></component>
       </n-layout>
-      <n-layout-footer :inverted="inverted" bordered>
-        <!-- 底部区域,可以放些网站信息等 -->
-      </n-layout-footer>
     </n-layout>
   </n-space>
 </template>
 
 <script lang="ts">
-import { h, defineComponent, ref, Component } from 'vue'
-import { NIcon } from 'naive-ui'
-import {
-  BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon
-} from '@vicons/ionicons5'
+import { h, ref, defineComponent, Component } from "vue";
+import type { DefineComponent } from "vue";
+import { NIcon, useMessage } from "naive-ui";
+import type { MenuOption } from "naive-ui";
+import { BookOutline as BookIcon, CaretDownOutline } from "@vicons/ionicons5";
+import jsonParser from "@/render/components/json-parse/index.vue";
+import { useRouter } from "vue-router";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 
-function renderIcon (icon: Component) {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
-
-const menuOptions = [
+const menuOptions: MenuOption[] = [
   {
-    label: '且听风吟',
-    key: 'hear-the-wind-sing',
-    icon: renderIcon(BookIcon)
+    label: "且听风吟",
+    key: "hear-the-wind-sing",
+    href: "https://baike.baidu.com/item/%E4%B8%94%E5%90%AC%E9%A3%8E%E5%90%9F/3199",
   },
   {
-    label: '1973年的弹珠玩具',
-    key: 'pinball-1973',
-    icon: renderIcon(BookIcon),
-    disabled: true,
+    label: "json解析器",
+    key: "jsonParser",
+  },
+  {
+    label: "舞，舞，舞",
+    key: "dance-dance-dance",
     children: [
       {
-        label: '鼠',
-        key: 'rat'
-      }
-    ]
-  },
-  {
-    label: '寻羊冒险记',
-    key: 'a-wild-sheep-chase',
-    disabled: true,
-    icon: renderIcon(BookIcon)
-  },
-  {
-    label: '舞，舞，舞',
-    key: 'dance-dance-dance',
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        type: 'group',
-        label: '人物',
-        key: 'people',
+        type: "group",
+        label: "人物",
+        key: "people",
         children: [
           {
-            label: '叙事者',
-            key: 'narrator',
-            icon: renderIcon(PersonIcon)
+            label: "叙事者",
+            key: "narrator",
           },
           {
-            label: '羊男',
-            key: 'sheep-man',
-            icon: renderIcon(PersonIcon)
-          }
-        ]
+            label: "羊男",
+            key: "sheep-man",
+          },
+        ],
       },
       {
-        label: '饮品',
-        key: 'beverage',
-        icon: renderIcon(WineIcon),
+        label: "饮品",
+        key: "beverage",
         children: [
           {
-            label: '威士忌',
-            key: 'whisky'
-          }
-        ]
+            label: "威士忌",
+            key: "whisky",
+            href: "https://baike.baidu.com/item/%E5%A8%81%E5%A3%AB%E5%BF%8C%E9%85%92/2959816?fromtitle=%E5%A8%81%E5%A3%AB%E5%BF%8C&fromid=573&fr=aladdin",
+          },
+        ],
       },
       {
-        label: '食物',
-        key: 'food',
+        label: "食物",
+        key: "food",
         children: [
           {
-            label: '三明治',
-            key: 'sandwich'
-          }
-        ]
+            label: "三明治",
+            key: "sandwich",
+          },
+        ],
       },
       {
-        label: '过去增多，未来减少',
-        key: 'the-past-increases-the-future-recedes'
-      }
-    ]
-  }
-]
+        label: "过去增多，未来减少",
+        key: "the-past-increases-the-future-recedes",
+      },
+    ],
+  },
+];
 
 export default defineComponent({
-  setup () {
+  components: {
+    jsonParser,
+  },
+  setup() {
+    const message = useMessage();
+    let componentName = ref("jsonParse");
+    const router = useRouter();
     return {
-      inverted: ref(false),
-      menuOptions
-    }
-  }
-})
+      componentName: componentName,
+      collapsed: ref(false),
+      menuOptions,
+      handleUpdateValue(key: string, item: MenuOption) {
+        componentName.value = key
+        // message.info("[onUpdate:value]: " + JSON.stringify(key));
+        // message.info("[onUpdate:value]: " + JSON.stringify(item));
+      },
+      renderMenuLabel(option: MenuOption) {
+        if ("href" in option) {
+          return h(
+            "a",
+            { href: option.href, target: "_blank" },
+            option.label as string
+          );
+        }
+        return option.label as string;
+      },
+      renderMenuIcon(option: MenuOption) {
+        // 渲染图标占位符以保持缩进
+        if (option.key === "sheep-man") return true;
+        // 返回 falsy 值，不再渲染图标及占位符
+        if (option.key === "food") return null;
+        return h(NIcon, null, { default: () => h(BookIcon) });
+      },
+      // 默认展开
+      // defaultExpandedKeys: ['fish', 'braise'],
+      expandIcon() {
+        return h(NIcon, null, { default: () => h(CaretDownOutline) });
+      },
+    };
+  },
+});
 </script>

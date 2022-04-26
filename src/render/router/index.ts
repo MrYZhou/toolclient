@@ -11,7 +11,11 @@ import { createRouter, createWebHistory, createWebHashHistory, createMemoryHisto
 const routes: Array<RouteRecordRaw> = [{
     path: '/',
     component: () => import('../components/pannel.vue')
-},]
+},{
+    path:'/json-parse',
+    component: ()=> import('../components/json-parse/index.vue')
+}
+]
  
  
  
