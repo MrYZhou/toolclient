@@ -35,13 +35,12 @@
 </template>
 
 <script lang="ts">
-import { h, ref, defineComponent, Component } from "vue";
-import type { DefineComponent } from "vue";
-import { NIcon, useMessage } from "naive-ui";
-import type { MenuOption } from "naive-ui";
+import { MenuOption, NIcon, useMessage } from "naive-ui";
 import { BookOutline as BookIcon, CaretDownOutline } from "@vicons/ionicons5";
 import jsonParser from "@/render/components/json-parse/index.vue";
+import gitHelper from "@/render/components/gitHelper/index.vue";
 import { useRouter } from "vue-router";
+import { Ref } from "vue";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 
 const menuOptions: MenuOption[] = [
@@ -53,6 +52,10 @@ const menuOptions: MenuOption[] = [
   {
     label: "json解析器",
     key: "jsonParser",
+  },
+  {
+    label: "git工具",
+    key: "gitHelper",
   },
   {
     label: "舞，舞，舞",
@@ -105,16 +108,16 @@ const menuOptions: MenuOption[] = [
 export default defineComponent({
   components: {
     jsonParser,
+    gitHelper
   },
   setup() {
-    const message = useMessage();
-    let componentName = ref("jsonParse");
-    const router = useRouter();
+    let componentName:Ref<string> = ref("jsonParser");
     return {
       componentName: componentName,
       collapsed: ref(false),
       menuOptions,
       handleUpdateValue(key: string, item: MenuOption) {
+        
         componentName.value = key
         // message.info("[onUpdate:value]: " + JSON.stringify(key));
         // message.info("[onUpdate:value]: " + JSON.stringify(item));

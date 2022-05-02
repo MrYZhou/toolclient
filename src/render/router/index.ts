@@ -14,7 +14,14 @@ const routes: Array<RouteRecordRaw> = [{
 },{
     path:'/json-parse',
     component: ()=> import('../components/json-parse/index.vue')
-}
+},
+{
+    path:'/gitHelper',
+    component: ()=> import('../components/gitHelper/index.vue')
+},
+
+
+
 ]
  
  
