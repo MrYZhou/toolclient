@@ -1,27 +1,27 @@
 <template>
-  <n-form ref="formRef" :model="model" :rules="rules" label-placement="left">
+  <n-form ref="formRef" :model="model" :rules="rules" label-placement="left" label-width="auto">
     <n-row :gutter="12">
       <n-col :span="12">
-        <n-form-item path="age" label="项目路径">
-          <n-input v-model:value="model.age" @keydown.enter.prevent />
+        <n-form-item path="basePath" label="项目路径">
+          <n-input v-model:value="model.basePath" @keydown.enter.prevent />
         </n-form-item>
       </n-col>
 
       <n-col :span="12">
-        <n-form-item path="age" label="输入路径">
-          <n-input v-model:value="model.age" @keydown.enter.prevent />
+        <n-form-item path="outputPath" label="输出路径" >
+          <n-input v-model:value="model.outputPath" @keydown.enter.prevent />
         </n-form-item>
       </n-col>
 
       <n-col :span="12">
-        <n-form-item path="age" label="用户名">
-          <n-input v-model:value="model.age" @keydown.enter.prevent />
+        <n-form-item path="author" label="用户名" >
+          <n-input v-model:value="model.author" @keydown.enter.prevent />
         </n-form-item>
       </n-col>
 
       <n-col :span="12">
-        <n-form-item path="age" label="日期">
-          <n-date-picker v-model:value="range" type="datetimerange" clearable />
+        <n-form-item path="commitTime" label="日期" >
+          <n-date-picker v-model:value="model.commitTime" type="datetimerange" clearable />
         </n-form-item>
       </n-col>
     </n-row>
@@ -54,9 +54,10 @@ import {
 } from "naive-ui";
 
 interface ModelType {
-  age: string | null;
-  password: string | null;
-  reenteredPassword: string | null;
+  basePath: string | null;
+  outputPath: string | null;
+  author: string | null;
+  commitTime: [number, number] | null;
 }
 
 export default defineComponent({
@@ -64,23 +65,21 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null);
     const message = useMessage();
     const modelRef = ref<ModelType>({
-      age: null,
-      password: null,
-      reenteredPassword: null,
+      basePath: null,
+      outputPath: null,
+      author:null,
+      commitTime: null,
     });
     
     const rules: FormRules = {
-      age: [
+      basePath: [
         {
           required: true,
           validator(rule: FormItemRule, value: string) {
+            console.log(value)
             if (!value) {
-              return new Error("需要年龄");
-            } else if (!/^\d*$/.test(value)) {
-              return new Error("年龄应该为整数");
-            } else if (Number(value) < 18) {
-              return new Error("年龄应该超过十八岁");
-            }
+              return new Error("需要输入根路径");
+            } 
             return true;
           },
           trigger: ["input", "blur"],
@@ -96,6 +95,8 @@ export default defineComponent({
         e.preventDefault();
         formRef.value?.validate((errors) => {
           if (!errors) {
+            // 调用api
+            
 
           } else {
             console.log(errors);
