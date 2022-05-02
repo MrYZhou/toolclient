@@ -27,3 +27,4 @@ dist-ssr
 electron
 pnpm-lock.yaml
 distMain/*
+src/render/components.d.ts
