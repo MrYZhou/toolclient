@@ -1,3 +1,5 @@
 import {contextBridge,ipcRenderer} from 'electron'
 
-contextBridge.exposeInMainWorld('render',ipcRenderer)
+contextBridge.exposeInMainWorld('ipcRenderer',{
+    sendTest: (val:string) => ipcRenderer.sendSync('app-update',val)
+})

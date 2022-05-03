@@ -3,7 +3,20 @@
     <n-row :gutter="12">
       <n-col :span="12">
         <n-form-item path="basePath" label="项目路径">
-          <n-input v-model:value="model.basePath" @keydown.enter.prevent />
+          <n-input v-model:value="model.basePath" @keydown.enter.prevent/>
+          <!-- <n-button>
+          选择
+          <input
+            id="file"
+            @change="fileChange"
+            @input="fileInput"
+            type="file"
+            class="directory-input"
+            webkitdirectory
+            title="可以选择文件夹"
+          />
+          </n-button> -->
+          
         </n-form-item>
       </n-col>
 
@@ -44,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { ComponentInternalInstance, defineComponent, ref } from "vue";
 import {
   FormInst,
   FormItemInst,
@@ -70,13 +83,16 @@ export default defineComponent({
       author:null,
       commitTime: null,
     });
-    
+    let instance: any = null
+    onMounted(() => {
+       instance = inject('proxy')
+    })
+    const { proxy } = (getCurrentInstance() as ComponentInternalInstance)
     const rules: FormRules = {
       basePath: [
         {
           required: true,
           validator(rule: FormItemRule, value: string) {
-            console.log(value)
             if (!value) {
               return new Error("需要输入根路径");
             } 
@@ -86,18 +102,35 @@ export default defineComponent({
         },
       ],
     };
+    const fileChange = (payload: Event)=>{
+      const fu = document.getElementById('file')
+        if (fu == null) return
+    }
+    const fileInput = (payload: Event)=>{
+      console.log(payload,'fileInput');
+      // const fu = document.getElementById('file')
+      //   if (fu == null) return
+      //   console.log(payload)
+      //   window.aa = fu
+        // instance?.model?.imgSavePath = fu.files[0].path
+    }
     return {
       formRef,
       model: modelRef,
       rules,
       range: ref<[number, number]>([Date.now(), Date.now()]),
+      fileChange,
+      fileInput,
       handleValidateButtonClick(e: MouseEvent) {
-        e.preventDefault();
+        e.preventDefault()
+          var data = window.ipcRenderer.sendTest(123)  //同步消息 
+            console.log(data) 
         formRef.value?.validate((errors) => {
           if (!errors) {
             // 调用api
-            
-
+           
+            var data = window.ipcRenderer.sendTest(123)  //同步消息 
+            console.log(data) 
           } else {
             console.log(errors);
             message.error("验证失败");
@@ -108,3 +141,11 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="css">
+  .directory-input{
+    width: 100%;
+    position: absolute;
+    left: -1px;
+    opacity: 0
+  }
+</style>
