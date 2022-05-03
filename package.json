@@ -1,4 +1,3 @@
-
 {
   "name": "toolbox",
   "private": true,
@@ -6,7 +5,7 @@
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
-    "electron:dev": "concurrently vite \"pnpm main:build\" \"electron .\"",
+    "electron:dev": "concurrently vite \"pnpm main:build && electron .\"",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
     "main:build": "tsc -p  src/main --outDir distMain",
     "render:build": "vue-tsc --noEmit && vite build",
@@ -22,6 +21,7 @@
     "url": "https://gitee.com/lgpr/toolbox.git"
   },
   "dependencies": {
+    "electron-store": "^8.0.1",
     "pinia": "^2.0.13",
     "vue": "^3.2.25",
     "vue-json-viewer": "3",
