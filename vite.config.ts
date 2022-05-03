@@ -8,6 +8,8 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 import { resolve } from 'path'
 
+import WindiCSS from 'vite-plugin-windicss'
+
 
 
 // https://vitejs.dev/config/
@@ -15,6 +17,7 @@ export default defineConfig({
   // 插件注册
   plugins: [
     vue(),
+    WindiCSS(),
     Components({
       resolvers: [NaiveUiResolver()], // naive ui 导入
       dts: './src/render/components.d.ts',

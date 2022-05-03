@@ -1,3 +1,4 @@
+
 {
   "name": "toolbox",
   "private": true,
@@ -38,7 +39,9 @@
     "unplugin-auto-import": "^0.7.1",
     "unplugin-vue-components": "^0.18.5",
     "vite": "^2.9.6",
-    "vue-tsc": "^0.29.8"
+    "vite-plugin-windicss": "^1.8.4",
+    "vue-tsc": "^0.29.8",
+    "windicss": "^3.5.1"
   },
   "build": {
     "appId": "com.toolbox.app",
