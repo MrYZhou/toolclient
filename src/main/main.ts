@@ -1,16 +1,19 @@
 
-import { webContents } from "electron"
+import { webContents,ipcMain } from "electron"
 
 const { app, BrowserWindow ,protocol } = require('electron')
 const path = require('path')
 
+/**解决监听器初始化未定义异常 */
+const ElectronStore = require('electron-store');
+ElectronStore.initRenderer();
 
+// 主窗口创建
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      webSecurity: false,
       preload: path.join(__dirname, 'preload.js')
     }
   })
@@ -27,6 +30,7 @@ function createWindow () {
 
 }
 
+// 生命周期
 app.whenReady().then(() => {
   createWindow()
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -35,10 +39,15 @@ app.whenReady().then(() => {
     let path = decodeURI(url.split('?')[0])
     callback(path)
   })
+ 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
+      
       createWindow()
     }
+    
+    
+    
   })
 })
 
@@ -47,3 +56,13 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+// 自定义监听
+ipcMain.on('app-update', (event: Electron.IpcMainEvent, ...args) => {
+      
+  console.log(1213)
+  event.returnValue = args
+  
+  // 其他处理逻辑
+})
+
