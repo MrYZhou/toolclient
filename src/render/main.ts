@@ -1,10 +1,12 @@
-import { createApp } from "vue";
+import { ComponentInternalInstance, createApp } from "vue";
 import App from "./App.vue";
 import { createPinia } from "pinia";
 import router from './router'
 import Panel from './components/json-parse/index.vue'
 
 import JsonViewer from 'vue-json-viewer'
+import 'virtual:windi.css'
+
 
 import {
   // create naive ui
@@ -32,4 +34,6 @@ app.use(router)
 // 挂载全局组件
 app.component('Panel',Panel)
 
+
+// 变量
 app.mount("#app");
