@@ -1,12 +1,27 @@
 
-import { webContents,ipcMain } from "electron"
+import { webContents,ipcMain,app, BrowserWindow ,protocol } from "electron"
 
-const { app, BrowserWindow ,protocol } = require('electron')
-const path = require('path')
+// const {  } = require('electron')
+import path from 'path';
 
 /**解决监听器初始化未定义异常 */
-const ElectronStore = require('electron-store');
-ElectronStore.initRenderer();
+const Store = require('electron-store');
+
+const schema = {
+	foo: {
+		type: 'number',
+		maximum: 100,
+		minimum: 1,
+		default: 50
+	},
+	bar: {
+		type: 'string',
+		format: 'url'
+	}
+};
+
+const store = new Store({schema});
+
 
 // 主窗口创建
 function createWindow () {
@@ -58,11 +73,25 @@ app.on('window-all-closed', () => {
 })
 
 // 自定义监听
+const { spawn } = require('child_process');
+
 ipcMain.on('app-update', (event: Electron.IpcMainEvent, ...args) => {
       
   console.log(1213)
   event.returnValue = args
-  
-  // 其他处理逻辑
+  // 执行命令
+  const ls = spawn('echo', ['hello']);
+
+  ls.stdout.on('data', (data: any) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  ls.stderr.on('data', (data: any) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  ls.on('close', (code: any) => {
+    console.log(`child process exited with code ${code}`);
+  });
 })
 
