@@ -1,12 +1,9 @@
 declare global {
   interface Window {
     ipcRenderer:{
-      sendTest:Function
+      sendGitLogSolve:Function
     };
  }
-//  interface IpcRenderer{
-//   sendTest:(args:string)=>void
-//  }
 }
 
 export {};

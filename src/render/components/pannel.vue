@@ -111,7 +111,7 @@ export default defineComponent({
     gitHelper
   },
   setup() {
-    let componentName:Ref<string> = ref("jsonParser");
+    let componentName:Ref<string> = ref("gitHelper");
     return {
       componentName: componentName,
       collapsed: ref(false),

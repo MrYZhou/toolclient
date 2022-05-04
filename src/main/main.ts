@@ -3,6 +3,7 @@ import { webContents,ipcMain,app, BrowserWindow ,protocol } from "electron"
 
 // const {  } = require('electron')
 import path from 'path';
+import { gitLog } from "./util/gitHash";
 
 /**解决监听器初始化未定义异常 */
 const Store = require('electron-store');
@@ -73,25 +74,19 @@ app.on('window-all-closed', () => {
 })
 
 // 自定义监听
-const { spawn } = require('child_process');
-
-ipcMain.on('app-update', (event: Electron.IpcMainEvent, ...args) => {
+ipcMain.on('sendGitLogSolve', async (event: Electron.IpcMainEvent, ...args) => {
       
-  console.log(1213)
-  event.returnValue = args
+  
   // 执行命令
-  const ls = spawn('echo', ['hello']);
-
-  ls.stdout.on('data', (data: any) => {
-    console.log(`stdout: ${data}`);
-  });
-
-  ls.stderr.on('data', (data: any) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  ls.on('close', (code: any) => {
-    console.log(`child process exited with code ${code}`);
-  });
+  try {
+    let model = args[0]
+    let result = await gitLog(model)
+    console.log(result);
+    event.returnValue = result
+  } catch (error) {
+    console.log(error);
+    event.returnValue = []
+  }
+ 
 })
 
