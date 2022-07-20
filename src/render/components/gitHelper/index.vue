@@ -120,7 +120,7 @@ export default defineComponent({
     interface GitLog {
       path: string;
     }
-    let data= ref([]);
+    let data = ref<[GitLog]>();
     return {
       data,
 
@@ -136,40 +136,37 @@ export default defineComponent({
           if (!errors) {
             // 调用api
             console.log({
-              'basePath': model.basePath,
-              'author': model.author,
-              'startDate':model.commitTime?.[0],
-              'endDate':model.commitTime?.[1]
-            })
-            let time1 = model.commitTime?.[0] as number
-            let time2 = model.commitTime?.[1] as number
-            let startDate = ''
-             let endDate=''
-            if(time1){
-               startDate= new Date(time1).toLocaleString().replaceAll("/","-")
-            }
-            if(time2){
-                endDate = new Date(time2).toLocaleString().replaceAll("/","-")
-            }
-              
-             
-            let dataList = window.ipcRenderer.sendGitLogSolve({
-              'basePath': model.basePath,
-              'author': model.author,
-              'startDate':startDate,
-              'endDate':endDate
-            }); //同步消息
-            data.value = []
-            let filterArr = new Set<string>()
-            dataList.forEach((item: string) => {
-              filterArr.add( item );
+              basePath: model.basePath,
+              author: model.author,
+              startDate: model.commitTime?.[0],
+              endDate: model.commitTime?.[1],
             });
-            filterArr.forEach(item =>{
-              data.value.push({'path':item} as never)
-            })
+            let time1 = model.commitTime?.[0] as number;
+            let time2 = model.commitTime?.[1] as number;
+            let startDate = "";
+            let endDate = "";
+            if (time1) {
+              startDate = new Date(time1).toLocaleString().replaceAll("/", "-");
+            }
+            if (time2) {
+              endDate = new Date(time2).toLocaleString().replaceAll("/", "-");
+            }
+
+            let dataList = window.ipcRenderer.sendGitLogSolve({
+              basePath: model.basePath,
+              author: model.author,
+              startDate: startDate,
+              endDate: endDate,
+            }); //同步消息
+            data.value = [] as any;
+            let filterArr = new Set<string>();
+            dataList?.forEach((item: string) => {
+              filterArr.add(item);
+            });
+            filterArr.forEach((item) => {
+              data.value?.push({ path: item } as never);
+            });
             console.log(data.value);
-
-
           } else {
             message.error("验证失败");
           }

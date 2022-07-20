@@ -1,92 +1,115 @@
+import { webContents, ipcMain, app, BrowserWindow, protocol } from "electron";
 
-import { webContents,ipcMain,app, BrowserWindow ,protocol } from "electron"
-
-// const {  } = require('electron')
-import path from 'path';
+import path from "path";
 import { gitLog } from "./util/gitHash";
 
 /**解决监听器初始化未定义异常 */
-const Store = require('electron-store');
+const Store = require("electron-store");
 
 const schema = {
-	foo: {
-		type: 'number',
-		maximum: 100,
-		minimum: 1,
-		default: 50
-	},
-	bar: {
-		type: 'string',
-		format: 'url'
-	}
+  foo: {
+    type: "number",
+    maximum: 100,
+    minimum: 1,
+    default: 50,
+  },
+  bar: {
+    type: "string",
+    format: "url",
+  },
 };
 
-const store = new Store({schema});
+const store = new Store({ schema });
 
-
+let win: BrowserWindow = null as any;
 // 主窗口创建
-function createWindow () {
-  const win = new BrowserWindow({
-    width: 800,
+function createWindow() {
+  win = new BrowserWindow({
+    width: 1000,
     height: 600,
+    // transparent: true,
+    // resizable: false,
+    frame: false,
+    titleBarStyle: "customButtonsOnHover",
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
-  if(process.env.npm_lifecycle_event =="electron:dev"){
-    
-    win.loadURL('http://localhost:3000')
-    
-    win.webContents.openDevTools()
-    
-  }else {
-    win.loadFile('./dist/index.html')
-  }
-  
+      // devTools: false, //不开启调试
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+  // 隐藏顶部菜单
+  win.setMenu(null);
+  // 按16:10的缩放比例
+  win.setAspectRatio(1.6);
+  // 判断开发环境还是打包环境
+  if (process.env.npm_lifecycle_event == "electron:dev") {
+    win.loadURL("http://localhost:3000");
 
+    win.webContents.openDevTools();
+  } else {
+    win.loadFile("./dist/index.html");
+  }
 }
 
 // 生命周期
 app.whenReady().then(() => {
-  createWindow()
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
-  protocol.registerFileProtocol('files', (request, callback) => {
-    const url = request.url.substring(8)
-    let path = decodeURI(url.split('?')[0])
-    callback(path)
-  })
- 
-  app.on('activate', () => {
+  createWindow();
+  process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+  protocol.registerFileProtocol("files", (request, callback) => {
+    const url = request.url.substring(8);
+    let path = decodeURI(url.split("?")[0]);
+    callback(path);
+  });
+
+  app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      
-      createWindow()
+      createWindow();
     }
-    
-    
-    
-  })
-})
+  });
+});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-})
+});
 
-// 自定义监听
-ipcMain.on('sendGitLogSolve', async (event: Electron.IpcMainEvent, ...args) => {
-      
-  
+// 自定义函数
+ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
   // 执行命令
   try {
-    let model = args[0]
-    let result = await gitLog(model)
-    console.log(result);
-    event.returnValue = result
+    let model = args[0];
+    let result = await gitLog(model);
+    console.log(result, 11);
+    event.returnValue = result;
   } catch (error) {
     console.log(error);
-    event.returnValue = []
+    event.returnValue = [];
   }
- 
-})
+});
 
+ipcMain.on("windowHan", async (event: Electron.IpcMainEvent, ...args) => {
+  // 执行命令
+  let model = args[0];
+  switch (model) {
+    case "minimize":
+      win.minimize();
+      break;
+
+    case "maximize":
+      if (process.platform === "darwin") {
+        win.setFullScreen(true);
+      } else {
+        win.maximize();
+      }
+      break;
+    case "close":
+      app.quit();
+      break;
+
+    case "openDev":
+      win.webContents.openDevTools();
+      break;
+    default:
+      break;
+  }
+});
