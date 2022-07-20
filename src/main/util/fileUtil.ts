@@ -2,11 +2,10 @@ const fs = require("fs");
 const path = require("path");
 
 let sourceDir = "",
-targetDir = "";
-
+  targetDir = "";
 
 // 复制文件夹
-let copyFolder = (srcDir:string, tarDir:string, cb?:Function) => {
+let copyFolder = (srcDir: string, tarDir: string, cb?: Function) => {
   let isExit = fs.existsSync(tarDir);
   if (!isExit) {
     fs.mkdirSync(tarDir, 777);
@@ -20,7 +19,7 @@ let copyFolder = (srcDir:string, tarDir:string, cb?:Function) => {
       let srcPath = path.join(srcDir, file);
       let tarPath = path.join(tarDir, file);
 
-      fs.stat(srcPath, (err: any, stats: { isDirectory: () => any; }) => {
+      fs.stat(srcPath, (err: any, stats: { isDirectory: () => any }) => {
         if (stats.isDirectory()) {
           fs.existsSync(tarPath)
             ? copyFolder(srcPath, tarPath)
@@ -35,8 +34,12 @@ let copyFolder = (srcDir:string, tarDir:string, cb?:Function) => {
     files.length === 0 && cb && cb();
   });
 };
-
-let copyFile = function (srcPath: any, tarPath: any, cb?: ((arg0: any) => any) | undefined) {
+// 复制文件,前提是文件夹存在
+let copyFile = function (
+  srcPath: any,
+  tarPath: any,
+  cb?: ((arg0: any) => any) | undefined
+) {
   let rs = fs.createReadStream(srcPath);
   rs.on("error", function (err: any) {
     if (err) {
@@ -59,4 +62,18 @@ let copyFile = function (srcPath: any, tarPath: any, cb?: ((arg0: any) => any) |
   rs.pipe(ws);
 };
 
+// 初始化文件夹,某个文件路径中间文件夹不存在就生成,只用于文件
+// 也可以理解创建上一级的目录
+// C:\Users\JNPF\Desktop\temp\src\main\main.ts
+let mkdirs = (tarDir: string) => {
+  return new Promise((resolve, reject) => {
+    console.log(tarDir, "create");
+    if (!fs.existsSync(tarDir)) {
+      mkdirs(path.resolve(tarDir, "../"));
+      fs.mkdirSync(tarDir, 777);
+    }
+    resolve(1);
+  });
+};
 
+export { copyFolder, copyFile, mkdirs };

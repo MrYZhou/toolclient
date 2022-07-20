@@ -1,9 +1,10 @@
 declare global {
   interface Window {
-    ipcRenderer:{
-      sendGitLogSolve:Function
+    ipcRenderer: {
+      [x: string]: any;
+      sendGitLogSolve: Function;
     };
- }
+  }
 }
 
 export {};

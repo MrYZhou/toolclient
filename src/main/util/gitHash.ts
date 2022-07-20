@@ -1,4 +1,5 @@
-import { pushChangeFile } from "./hashSolve";
+import { pushChangeFile ,generateFile } from "./hashSolve";
+
 
 const exec = require("child_process").exec;
 
@@ -15,7 +16,7 @@ const gitLog = (model: Model) => {
   //C:\\Users\\lg\\Desktop\\toolbox
   let author = model.author;
 
-  let outputDir = "";
+  let outputPath = model.outputPath;
 
   let startDate = model.startDate;
   let endDate = model.endDate;
@@ -58,7 +59,11 @@ const gitLog = (model: Model) => {
       if (code == 0) {
         //执行结束
         if (keyList.length > 0) {
-          let result = await pushChangeFile(keyList, sourceDir);
+          let result = await pushChangeFile(keyList, sourceDir) as string[];
+          // 判断是否输出文件
+          if(outputPath){
+            generateFile(result,sourceDir,outputPath)
+          }            
           resolve(result);
         } else {
           resolve([]);

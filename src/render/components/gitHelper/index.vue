@@ -85,8 +85,8 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null);
     const message = useMessage();
     let model = reactive<ModelType>({
-      basePath: "C:\\Users\\lg\\Desktop\\toolbox",
-      outputPath: null,
+      basePath: "C:\\Users\\JNPF\\Desktop\\toolbox",
+      outputPath: "C:\\Users\\JNPF\\Desktop\\temp",
       author: null,
       commitTime: null,
     });
@@ -121,6 +121,7 @@ export default defineComponent({
       path: string;
     }
     let data = ref<[GitLog]>();
+    // let data = ref([]);
     return {
       data,
 
@@ -157,6 +158,7 @@ export default defineComponent({
               author: model.author,
               startDate: startDate,
               endDate: endDate,
+              outputPath: model.outputPath,
             }); //同步消息
             data.value = [] as any;
             let filterArr = new Set<string>();

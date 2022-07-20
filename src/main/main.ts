@@ -4,6 +4,8 @@ import path from "path";
 import { gitLog } from "./util/gitHash";
 
 /**解决监听器初始化未定义异常 */
+
+// 存储
 const Store = require("electron-store");
 
 const schema = {
@@ -13,6 +15,9 @@ const schema = {
     minimum: 1,
     default: 50,
   },
+  config: {
+    // fullscreen: false,
+  },
   bar: {
     type: "string",
     format: "url",
@@ -20,6 +25,62 @@ const schema = {
 };
 
 const store = new Store({ schema });
+// 自定义函数
+ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
+  // 执行命令
+  try {
+    let model = args[0];
+    let result = await gitLog(model);
+    console.log(result, 11);
+    event.returnValue = result;
+  } catch (error) {
+    console.log(error);
+    event.returnValue = [];
+  }
+});
+
+ipcMain.on("windowHan", async (event: Electron.IpcMainEvent, ...args) => {
+  // 执行命令
+  try {
+    let model = args[0];
+    switch (model) {
+      case "min":
+        console.log("min");
+        win.minimize();
+        break;
+      case "max":
+        console.log("max");
+        if (process.platform === "darwin") {
+          // mac系统
+          let state = store.get("config.fullscreen");
+          store.set("config.fullscreen", !state);
+          win.setFullScreen(!state);
+        } else {
+          // window系统
+          console.log("window系统");
+          let state = store.get("config.fullscreen");
+          store.set("config.fullscreen", !state);
+          state ? win.maximize() : win.unmaximize();
+        }
+        break;
+      case "close":
+        console.log("close");
+        win.close();
+        app.exit();
+        break;
+
+      case "openDev":
+        win.webContents.openDevTools();
+        break;
+      default:
+        console.log("default");
+        break;
+    }
+    event.returnValue = "";
+  } catch (error) {
+    console.log(error, "winhandle");
+  }
+});
 
 let win: BrowserWindow = null as any;
 // 主窗口创建
@@ -70,46 +131,5 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
-  }
-});
-
-// 自定义函数
-ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
-  // 执行命令
-  try {
-    let model = args[0];
-    let result = await gitLog(model);
-    console.log(result, 11);
-    event.returnValue = result;
-  } catch (error) {
-    console.log(error);
-    event.returnValue = [];
-  }
-});
-
-ipcMain.on("windowHan", async (event: Electron.IpcMainEvent, ...args) => {
-  // 执行命令
-  let model = args[0];
-  switch (model) {
-    case "minimize":
-      win.minimize();
-      break;
-
-    case "maximize":
-      if (process.platform === "darwin") {
-        win.setFullScreen(true);
-      } else {
-        win.maximize();
-      }
-      break;
-    case "close":
-      app.quit();
-      break;
-
-    case "openDev":
-      win.webContents.openDevTools();
-      break;
-    default:
-      break;
   }
 });
