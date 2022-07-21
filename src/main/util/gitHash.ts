@@ -1,5 +1,6 @@
 import { pushChangeFile ,generateFile } from "./hashSolve";
 
+import { webContents  } from "electron";
 
 const exec = require("child_process").exec;
 
@@ -60,9 +61,13 @@ const gitLog = (model: Model) => {
         //执行结束
         if (keyList.length > 0) {
           let result = await pushChangeFile(keyList, sourceDir) as string[];
-          // 判断是否输出文件
+          // 判断是否输出副本
           if(outputPath){
-            generateFile(result,sourceDir,outputPath)
+            generateFile(result,sourceDir,outputPath).then(res=>{
+              webContents.getFocusedWebContents().send('handleGitFileComplete',1 )
+            }).catch(e=>{
+              webContents.getFocusedWebContents().send('handleGitFileComplete',2 )
+            })
           }            
           resolve(result);
         } else {

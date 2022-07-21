@@ -66,17 +66,22 @@ const generateFile = (
   outputDir: string | null
 ) => {
   return new Promise((resolve, reject) => {
-    fileList.forEach(async (item) => {
-      let outputPath = path.join(
-        outputDir,
-        item.replace(sourceDir as string, "")
-      );
-      // console.log(outputDir, outputPath, "---");
-      await mkdirs(outputPath);
-      copyFile(item, outputPath);
-    });
-
-    resolve(1);
+    try {
+      fileList.forEach(async (item) => {
+        let pathUrl = item.replace(sourceDir as string, "") as string;
+        let outputPath = "";
+        outputPath = path.join(outputDir, pathUrl);
+        if (pathUrl.includes("\\")) {
+          await mkdirs(outputPath);
+        }
+        copyFile(item, outputPath);
+      });
+  
+      resolve(1);
+    } catch (error) {
+      reject(1)
+    }
+   
   });
 };
 export { pushChangeFile, generateFile };

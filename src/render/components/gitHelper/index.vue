@@ -90,7 +90,10 @@ export default defineComponent({
       author: null,
       commitTime: null,
     });
-    onMounted(() => {});
+    onMounted(() => {
+      // 绑定监听
+      window.ipcRenderer.handleGitFileComplete("生成");
+    });
     const rules: FormRules = {
       basePath: [
         {
@@ -153,16 +156,24 @@ export default defineComponent({
               endDate = new Date(time2).toLocaleString().replaceAll("/", "-");
             }
 
-            let dataList = window.ipcRenderer.sendGitLogSolve({
+            let res = window.ipcRenderer.sendGitLogSolve({
               basePath: model.basePath,
               author: model.author,
               startDate: startDate,
               endDate: endDate,
               outputPath: model.outputPath,
             }); //同步消息
+            console.log(res, "结果");
+            if (res == 1) {
+              message.warning("生成成功");
+              return;
+            } else if (res == 2) {
+              message.warning("生成失败");
+              return;
+            }
             data.value = [] as any;
             let filterArr = new Set<string>();
-            dataList?.forEach((item: string) => {
+            res?.forEach((item: string) => {
               filterArr.add(item);
             });
             filterArr.forEach((item) => {

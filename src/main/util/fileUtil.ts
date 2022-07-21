@@ -67,10 +67,11 @@ let copyFile = function (
 // C:\Users\JNPF\Desktop\temp\src\main\main.ts
 let mkdirs = (tarDir: string) => {
   return new Promise((resolve, reject) => {
-    console.log(tarDir, "create");
-    if (!fs.existsSync(tarDir)) {
-      mkdirs(path.resolve(tarDir, "../"));
-      fs.mkdirSync(tarDir, 777);
+    // console.log(tarDir, "create");
+    let dir = path.resolve(tarDir, "../");
+    if (tarDir && !fs.existsSync(dir)) {
+      mkdirs(dir);
+      fs.mkdirSync(dir, 777);
     }
     resolve(1);
   });

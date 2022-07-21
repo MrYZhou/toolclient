@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "electron:dev": "concurrently vite \"pnpm main:build\"  \"electron .\"",
+    "electron:devlazy": "concurrently  \"pnpm main:build\" \"electron .\" \"pnpm vite\"",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
     "main:build": "tsc -p  src/main --outDir distMain",
     "render:build": "vue-tsc --noEmit && vite build",

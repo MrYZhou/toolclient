@@ -25,6 +25,35 @@ const schema = {
 };
 
 const store = new Store({ schema });
+let win: BrowserWindow = null as any;
+// 主窗口创建
+function createWindow() {
+  win = new BrowserWindow({
+    width: 1000,
+    height: 600,
+    // transparent: true,
+    // resizable: false,
+    frame: false,
+    titleBarStyle: "customButtonsOnHover",
+    webPreferences: {
+      // devTools: false, //不开启调试
+      preload: path.join(__dirname, "preload.js"),
+    },
+  });
+  // 隐藏顶部菜单
+  win.setMenu(null);
+  // 按16:10的缩放比例
+  win.setAspectRatio(1.6);
+  // 判断开发环境还是打包环境
+  if (process.env.npm_lifecycle_event == "electron:dev") {
+    win.loadURL("http://localhost:3000");
+
+    win.webContents.openDevTools();
+  } else {
+    win.loadFile("./dist/index.html");
+  }
+}
+
 // 自定义函数
 ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
   // 执行命令
@@ -81,35 +110,6 @@ ipcMain.on("windowHan", async (event: Electron.IpcMainEvent, ...args) => {
     console.log(error, "winhandle");
   }
 });
-
-let win: BrowserWindow = null as any;
-// 主窗口创建
-function createWindow() {
-  win = new BrowserWindow({
-    width: 1000,
-    height: 600,
-    // transparent: true,
-    // resizable: false,
-    frame: false,
-    titleBarStyle: "customButtonsOnHover",
-    webPreferences: {
-      // devTools: false, //不开启调试
-      preload: path.join(__dirname, "preload.js"),
-    },
-  });
-  // 隐藏顶部菜单
-  win.setMenu(null);
-  // 按16:10的缩放比例
-  win.setAspectRatio(1.6);
-  // 判断开发环境还是打包环境
-  if (process.env.npm_lifecycle_event == "electron:dev") {
-    win.loadURL("http://localhost:3000");
-
-    win.webContents.openDevTools();
-  } else {
-    win.loadFile("./dist/index.html");
-  }
-}
 
 // 生命周期
 app.whenReady().then(() => {
