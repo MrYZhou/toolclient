@@ -91,7 +91,7 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null);
     const message = useMessage();
     let model = reactive<ModelType>({
-      basePath: "C:\\Users\\JNPF\\Desktop\\toolbox",
+      basePath: "E:\\jnpf-web",
       outputPath: "C:\\Users\\JNPF\\Desktop\\temp",
       author: null,
       commitTime: null,

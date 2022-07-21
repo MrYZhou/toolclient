@@ -3,25 +3,24 @@ import { copyFile, mkdirs } from "./fileUtil";
 const exec = require("child_process").exec;
 const path = require("path");
 const pushChangeFile = (hashGitArr: string[], sourceDir: string | null) => {
-  // let sourceDir = "C:\\Users\\lg\\Desktop\\toolbox";
   let outputDir = "";
 
-  // hashGitArr = [
-  //   "cf3ccd676e11abf7eb9df27b43f7358cfee2e51f",
-  //   "d9a65afd02900c4ff77c07f6677573df9771993b",
-  //   "2378e4af378c59dd07f6039f0e50f66f0101c46a",
-  // ];
   let getFileInfo = null;
   let setArr = new Set();
   let count = 0;
   let keySize = hashGitArr.length;
   return new Promise((resolve, reject) => {
     hashGitArr.forEach((hashKey) => {
-      let direct = `cd ${sourceDir} && git log ${hashKey} --stat`;
-      getFileInfo = exec(direct);
+      let direct = `git log ${hashKey} --stat`;
+      getFileInfo = exec(direct, {
+        cwd: sourceDir,
+        timeout: 100000,
+        maxBuffer: 2000 * 1024 * 1024 * 1024,
+      });
 
       let save = false;
       getFileInfo.stdout.on("data", function (str: string) {
+        console.log("解析文件明细", str);
         if (save) return;
         let reg = new RegExp(hashKey + "[^]*files changed", "ig");
         let result = str.match(reg);
@@ -38,11 +37,11 @@ const pushChangeFile = (hashGitArr: string[], sourceDir: string | null) => {
             }
           });
         } else {
-          console.log("fail", hashKey);
+          console.log("无匹配", hashKey);
         }
       });
       getFileInfo.stderr.on("data", function (data: string) {
-        console.log("stderr: " + data);
+        console.log("解析文件失败", data);
       });
 
       getFileInfo.on("close", function (code: number) {
@@ -54,7 +53,8 @@ const pushChangeFile = (hashGitArr: string[], sourceDir: string | null) => {
             resolve(setArr);
           }
         } else {
-          console.log("Error");
+          resolve([]);
+          console.log("执行失败:Error");
         }
       });
     });
@@ -76,12 +76,11 @@ const generateFile = (
         }
         copyFile(item, outputPath);
       });
-  
+
       resolve(1);
     } catch (error) {
-      reject(1)
+      reject(1);
     }
-   
   });
 };
 export { pushChangeFile, generateFile };

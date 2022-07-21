@@ -1,6 +1,6 @@
-import { pushChangeFile ,generateFile } from "./hashSolve";
+import { pushChangeFile, generateFile } from "./hashSolve";
 
-import { webContents  } from "electron";
+import { webContents } from "electron";
 
 const exec = require("child_process").exec;
 
@@ -10,25 +10,24 @@ interface Model {
   author: string | null;
   startDate: number | string;
   endDate: number | string;
-  gitlog:string | null;
+  gitlog: string | null;
 }
 
 const gitLog = (model: Model) => {
   let sourceDir = model.basePath;
-  //C:\\Users\\lg\\Desktop\\toolbox
   let author = model.author;
 
   let outputPath = model.outputPath;
 
   let startDate = model.startDate;
   let endDate = model.endDate;
-  let gitlog = model.gitlog
-  console.log(model);
+  let gitlog = model.gitlog;
+  console.log(model, "数据");
   let direct = "";
   if (author) {
-    direct = `cd ${sourceDir} && git log --author=${author}`;
+    direct = `git log --author=${author}`;
   } else {
-    direct = `cd ${sourceDir} && git log`;
+    direct = `git log`;
   }
 
   if (startDate) {
@@ -37,48 +36,64 @@ const gitLog = (model: Model) => {
   if (endDate) {
     direct += ` --before="${endDate}"`;
   }
+  console.log(direct, "输出命令");
   return new Promise((resolve, reject) => {
-    const child = exec(direct);
-
-    let keyList: string[] = [];
-    child.stdout.on("data", function (data: string) {
-      const lines = data.split(/\r?\n/);
-
-      lines.forEach((line: string) => {
-        if (line.includes("commit")) {
-          let hashKey = line.split(" ")[1];
-
-          if (hashKey != "") {
-            keyList.push(hashKey);
-          }
-        }
+    try {
+      const child = exec(direct, {
+        cwd: sourceDir,
+        timeout: 100000,
+        maxBuffer: 2000 * 1024 * 1024,
       });
-    });
-    child.stderr.on("data", function (data: string) {
-      console.log("stderr: " + data);
-    });
-    child.on("close", async (code: number) => {
-      if (code == 0) {
-        //执行结束
-        if (keyList.length > 0) {
-          let result = await pushChangeFile(keyList, sourceDir) as string[];
-          // 判断是否输出副本
-          if(outputPath){
-            generateFile(result,sourceDir,outputPath).then(res=>{
-              webContents.getFocusedWebContents().send('handleGitFileComplete',1 )
-            }).catch(e=>{
-              webContents.getFocusedWebContents().send('handleGitFileComplete',2 )
-            })
-          }            
-          resolve(result);
+
+      let keyList: string[] = [];
+      child.stdout.on("data", function (data: string) {
+        console.log("数据解析");
+        const lines = data.split(/\r?\n/);
+        lines.forEach((line: string) => {
+          if (line.includes("commit")) {
+            let hashKey = line.split(" ")[1];
+
+            if (hashKey != "") {
+              keyList.push(hashKey);
+            }
+          }
+        });
+      });
+      child.stderr.on("data", function (data: string) {
+        console.log("执行错误: " + data);
+      });
+      child.on("close", async (code: number) => {
+        console.log(keyList, "数据列表");
+        if (code == 0) {
+          //执行结束
+          if (keyList.length > 0) {
+            let result = (await pushChangeFile(keyList, sourceDir)) as string[];
+            // 判断是否输出副本
+            if (outputPath) {
+              generateFile(result, sourceDir, outputPath)
+                .then((res) => {
+                  webContents
+                    .getFocusedWebContents()
+                    .send("handleGitFileComplete", 1);
+                })
+                .catch((e) => {
+                  webContents
+                    .getFocusedWebContents()
+                    .send("handleGitFileComplete", 2);
+                });
+            }
+            resolve(result);
+          } else {
+            resolve([]);
+          }
         } else {
           resolve([]);
+          console.log("Error");
         }
-      } else {
-        resolve([]);
-        console.log("Error");
-      }
-    });
+      });
+    } catch (error) {
+      console.log(error, "错误");
+    }
   });
 };
 
