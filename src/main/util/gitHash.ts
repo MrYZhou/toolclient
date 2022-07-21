@@ -10,6 +10,7 @@ interface Model {
   author: string | null;
   startDate: number | string;
   endDate: number | string;
+  gitlog:string | null;
 }
 
 const gitLog = (model: Model) => {
@@ -21,7 +22,7 @@ const gitLog = (model: Model) => {
 
   let startDate = model.startDate;
   let endDate = model.endDate;
-
+  let gitlog = model.gitlog
   console.log(model);
   let direct = "";
   if (author) {

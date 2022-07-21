@@ -46,6 +46,11 @@
           />
         </n-form-item>
       </n-col>
+      <!-- <n-col :span="12">
+        <n-form-item path="gitlog" label="记录值">
+          <n-input v-model:value="model.gitlog" @keydown.enter.prevent   type="textarea"/>
+        </n-form-item>
+      </n-col> -->
     </n-row>
 
     <n-row :gutter="[0, 24]">
@@ -78,6 +83,7 @@ interface ModelType {
   outputPath: string | null;
   author: string | null;
   commitTime: [number, number] | null;
+  gitlog: string | null;
 }
 
 export default defineComponent({
@@ -89,6 +95,7 @@ export default defineComponent({
       outputPath: "C:\\Users\\JNPF\\Desktop\\temp",
       author: null,
       commitTime: null,
+      gitlog: "",
     });
     onMounted(() => {
       // 绑定监听
