@@ -95,9 +95,11 @@
           </template>
         </n-switch>
       </n-layout-header>
-      <n-message-provider>
-        <router-view></router-view>
-      </n-message-provider>
+      <n-layout class="main-content">
+        <n-message-provider>
+          <router-view></router-view>
+        </n-message-provider>
+      </n-layout>
     </n-layout>
   </n-config-provider>
 </template>
@@ -123,9 +125,8 @@ export default defineComponent({
       theme.value = val ? null : darkTheme;
     };
     const min = () => {
-      console.log('min');
+      console.log("min");
       window.ipcRenderer.windowHan("min");
-      
     };
     const max = () => {
       window.ipcRenderer.windowHan("max");
@@ -188,5 +189,9 @@ export default defineComponent({
   width: 100%;
   top: 36px;
   /* border: 1px solid red; */
+}
+.main-content {
+  z-index: 99;
+  height: 100%;
 }
 </style>

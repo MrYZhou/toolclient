@@ -27,7 +27,8 @@ const routes: Array<RouteRecordRaw> = [{
  
  
 const router = createRouter({
-    history: createWebHistory(),
+    // 这种方式可以兼容electron,在history的模式下electron不能工作。
+    history: createWebHashHistory(),
     routes
 })
  
