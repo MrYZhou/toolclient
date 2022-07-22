@@ -91,7 +91,8 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null);
     const message = useMessage();
     let model = reactive<ModelType>({
-      basePath: "E:\\jnpf-web",
+      // basePath: "E:\\jnpf-web",
+      basePath: "C:\\Users\\JNPF\\Desktop\\toolbox",
       outputPath: "C:\\Users\\JNPF\\Desktop\\temp",
       author: null,
       commitTime: null,
@@ -170,17 +171,10 @@ export default defineComponent({
               endDate: endDate,
               outputPath: model.outputPath,
             }); //同步消息
-            console.log(res, "结果");
-            if (res == 1) {
-              message.warning("生成成功");
-              return;
-            } else if (res == 2) {
-              message.warning("生成失败");
-              return;
-            }
+
             data.value = [] as any;
             let filterArr = new Set<string>();
-            res?.forEach((item: string) => {
+            res.list?.forEach((item: string) => {
               filterArr.add(item);
             });
             filterArr.forEach((item) => {

@@ -1,4 +1,4 @@
-import { pushChangeFile, generateFile } from "./hashSolve";
+import { pushChangeFile, generateFile,pushDeleteFile } from "./hashSolve";
 
 import { webContents } from "electron";
 
@@ -68,8 +68,14 @@ const gitLog = (model: Model) => {
           //执行结束
           if (keyList.length > 0) {
             let result = (await pushChangeFile(keyList, sourceDir)) as string[];
-            // 判断是否输出副本
+            
+            let deleteArr = []  as any
+            // 判断是否输出修改记录副本
             if (outputPath) {
+
+              // 生成删除文件脚本
+              deleteArr = await pushDeleteFile(keyList, sourceDir,outputPath) as string[]
+
               generateFile(result, sourceDir, outputPath)
                 .then((res) => {
                   webContents
@@ -82,7 +88,11 @@ const gitLog = (model: Model) => {
                     .send("handleGitFileComplete", 2);
                 });
             }
-            resolve(result);
+            let data ={
+              list:result,
+              deletelist:deleteArr
+            }
+            resolve(data);
           } else {
             resolve([]);
           }
