@@ -1,4 +1,4 @@
 "nsis": {
-  "oneClick": false, //是否所有用于安装
+  "oneClick": false, //是否所有用户安装
   "allowToChangeInstallationDirectory":true
 },
