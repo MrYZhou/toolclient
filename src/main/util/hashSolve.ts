@@ -109,7 +109,7 @@ const pushDeleteFile = (
 };
 const createDeleteShell = (list: Set<string>, outputPath: string | null) => {
   list?.forEach((item: string) => {
-    let direct = "del /f /s /Q " + item;
+    let direct = "del /f /s /Q " + item + "\r\n";
     let target = path.join(outputPath, "deleteFile.bat");
     fs.writeFile(
       target,
