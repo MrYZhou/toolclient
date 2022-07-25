@@ -120,6 +120,7 @@ export default defineComponent({
     CloudyNight,
   },
   setup() {
+    const app = inject('app')
     let theme: Ref<null | BuiltInGlobalTheme> = ref(null);
     const change = (val: boolean) => {
       theme.value = val ? null : darkTheme;

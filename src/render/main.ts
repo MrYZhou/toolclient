@@ -7,6 +7,7 @@ import Panel from './components/json-parse/index.vue'
 import JsonViewer from 'vue-json-viewer'
 import 'virtual:windi.css'
 
+import * as config from './config'
 
 import {
   // create naive ui
@@ -34,6 +35,8 @@ app.use(router)
 // 挂载全局组件
 app.component('Panel',Panel)
 
+// 提供全局对象
+app.provide('app',config)
 
-// 变量
+// 渲染页面
 app.mount("#app");
