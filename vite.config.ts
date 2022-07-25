@@ -22,7 +22,7 @@ export default defineConfig({
       resolvers: [NaiveUiResolver()], // naive ui 导入
       dts: './src/render/components.d.ts',
       // imports 指定组件所在位置，默认为 src/components
-      dirs: ['src/render/components/'],
+      dirs: ['@/render/components/'],
     }),
     AutoImport({
       dts: './src/render/auto-imports.d.ts',

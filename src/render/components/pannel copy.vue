@@ -34,12 +34,12 @@
   </n-space>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import { MenuOption, NIcon, useMessage } from "naive-ui";
 import { BookOutline as BookIcon, CaretDownOutline } from "@vicons/ionicons5";
 import jsonParser from "@/render/components/json-parse/index.vue";
 import gitHelper from "@/render/components/gitHelper/index.vue";
-import sse from "@/render/components/sse/index.vue";
+import sse from  "@/render/components/sse/index.vue";
 import { useRouter } from "vue-router";
 import { Ref } from "vue";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
@@ -52,12 +52,10 @@ const menuOptions: MenuOption[] = [
   },
   {
     label: "json解析器",
-    component: jsonParser,
     key: "jsonParser",
   },
   {
     label: "git工具",
-    component: gitHelper,
     key: "gitHelper",
   },
   {
@@ -72,7 +70,6 @@ const menuOptions: MenuOption[] = [
           {
             label: "sse",
             key: "sse",
-            component: sse,
           },
           {
             label: "羊男",
@@ -108,34 +105,47 @@ const menuOptions: MenuOption[] = [
     ],
   },
 ];
-let componentName: Ref<string> = shallowRef("");
-componentName.value = sse as any;
-let collapsed = ref(false);
 
-const handleUpdateValue = (key: string, item: MenuOption) => {
-  return (componentName.value = item.component as any);
-};
-const renderMenuLabel = (option: MenuOption) => {
-  if ("href" in option) {
-    return h(
-      "a",
-      { href: option.href, target: "_blank" },
-      option.label as string
-    );
-  }
-  return option.label as string;
-};
-const renderMenuIcon = (option: MenuOption) => {
-  // 渲染图标占位符以保持缩进
-  if (option.key === "sheep-man") return true;
-  // 返回 false 值，不再渲染图标及占位符
-  if (option.key === "food") return null;
-  // 渲染图标
-  return h(NIcon, null, { default: () => h(BookIcon) });
-};
-// 默认展开
-// defaultExpandedKeys: ['fish', 'braise'],
-const expandIcon = () => {
-  return h(NIcon, null, { default: () => h(CaretDownOutline) });
-};
+export default defineComponent({
+  components: {
+    jsonParser,
+    gitHelper,sse
+  },
+  setup() {
+    let componentName: Ref<string> = ref("gitHelper");
+    return {
+      componentName: componentName,
+      collapsed: ref(false),
+      menuOptions,
+      handleUpdateValue(key: string, item: MenuOption) {
+        componentName.value = key;
+        // message.info("[onUpdate:value]: " + JSON.stringify(key));
+        // message.info("[onUpdate:value]: " + JSON.stringify(item));
+      },
+      renderMenuLabel(option: MenuOption) {
+        if ("href" in option) {
+          return h(
+            "a",
+            { href: option.href, target: "_blank" },
+            option.label as string
+          );
+        }
+        return option.label as string;
+      },
+      renderMenuIcon(option: MenuOption) {
+        // 渲染图标占位符以保持缩进
+        if (option.key === "sheep-man") return true;
+        // 返回 false 值，不再渲染图标及占位符
+        if (option.key === "food") return null;
+        // 渲染图标
+        return h(NIcon, null, { default: () => h(BookIcon) });
+      },
+      // 默认展开
+      // defaultExpandedKeys: ['fish', 'braise'],
+      expandIcon() {
+        return h(NIcon, null, { default: () => h(CaretDownOutline) });
+      },
+    };
+  },
+});
 </script>

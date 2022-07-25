@@ -100,7 +100,7 @@ export default defineComponent({
     });
     onMounted(() => {
       // 绑定监听
-      window.ipcRenderer.handleGitFileComplete("生成");
+      window?.ipcRenderer?.handleGitFileComplete("生成");
     });
     const rules: FormRules = {
       basePath: [

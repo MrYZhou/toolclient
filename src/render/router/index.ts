@@ -19,7 +19,10 @@ const routes: Array<RouteRecordRaw> = [{
     path:'/gitHelper',
     component: ()=> import('../components/gitHelper/index.vue')
 },
-
+{
+    path:'/sse',
+    component: ()=> import('../components/sse/index.vue')
+},
 
 
 ]
