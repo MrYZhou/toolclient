@@ -48,6 +48,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""), // 路径重写
       },
+      // '/websocket': { 
+      //   //代理 websocket
+      //   target: 'ws://localhost:3003/websocket',
+      //   ws: true
+      // }
     },
   },
   define: { "process.env": { VUE_APP_BASE_API: "http:www" } },
