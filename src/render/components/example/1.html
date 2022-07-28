@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script src="https://pixijs.download/release/pixi.js"></script>
+<body>
+  
+</body>
+
+<script>
+
+const app = new PIXI.Application();
+ 
+ const graphics = new PIXI.Graphics()
+     .beginFill(0xFF0000)
+     .drawCircle(0, 0, 50);
+  
+ const image = app.renderer.plugins.extract.image(graphics);
+ 
+document.body.appendChild(image);
+
+let dom = document.getElementsByTagName('img')
+function download(base64) {
+  console.log(base64);
+            var date = new Date();
+            if (!base64) {
+                return;
+            }
+            var aLink = document.createElement("a"); // 创建一个a标签
+            var blob = base64ToBlob(base64);
+            var event = document.createEvent("HTMLEvents");
+            event.initEvent("click", true, true);
+            aLink.download = date.getTime() + "." + blob.type.split("/")[1]; // 使用时间戳给文件命名
+            aLink.href = URL.createObjectURL(blob);
+            aLink.click();
+            URL.revokeObjectURL(aLink.href);
+            document.body.removeChild(aLink);
+        }
+        // base64转Blob对象
+        function base64ToBlob(code) {
+            var parts = code.split(";base64,");
+            var contentType = parts[0].split(":")[1];
+            var raw = window.atob(parts[1]);
+            var rawLength = raw.length;
+            var uint8Array = new Uint8Array(rawLength);
+            for (var i = 0; i < rawLength; i++) {
+                uint8Array[i] = raw.charCodeAt(i);
+            }
+            return new Blob([uint8Array], {type: contentType});
+        }
+        // 导出图片
+        download(dom[0].currentSrc)
+</script>
+</html>
