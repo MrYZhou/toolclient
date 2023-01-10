@@ -37,10 +37,10 @@ export default defineConfig({
   // 基础访问路径
   base: "./",
   server: {
-    // host: "0.0.0.0",
-    // port: 3000,
-    // open: true,
-    // strictPort: false,
+    host: "0.0.0.0",
+    port: 3000,
+    open: false,
+    strictPort: false,
     proxy: {
       "/api": {
         target: "http://192.168.20.43:3003",

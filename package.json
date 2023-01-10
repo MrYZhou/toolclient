@@ -5,6 +5,7 @@
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
+    "elec":"electron .",
     "electron:dev": "concurrently vite \"pnpm main:build\"  \"electron .\"",
     "electron:devlazy": "concurrently  \"pnpm main:build\" \"electron .\" \"pnpm vite\"",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "electron-store": "^8.0.1",
+    "node-xlsx": "^0.21.0",
     "pinia": "^2.0.13",
     "vicons": "^0.0.1",
     "vue": "^3.2.25",

@@ -11,6 +11,8 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   sendGitLogSolve: (val: any): Set<string> =>
     ipcRenderer.sendSync("sendGitLogSolve", val),
 
+  excelHandle:(path:string[]):void=>ipcRenderer.sendSync("excelHandle", path),
+
   /**
    *  win的页面监听,此处是窗口监听主线程的消息
    */

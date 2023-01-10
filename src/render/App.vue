@@ -121,6 +121,7 @@ export default defineComponent({
   },
   setup() {
     const app = inject('app')
+    console.log(app);
     let theme: Ref<null | BuiltInGlobalTheme> = ref(null);
     const change = (val: boolean) => {
       theme.value = val ? null : darkTheme;
