@@ -178,16 +178,8 @@ function  resolveExcel(model: any){
       console.log(k,321343124);
       result.push(k)
     })
-    console.log(result,34320000);
-    //输出用户表数据
-    // 导出数据
-    const buffer = xlsx.build([{ name: "jsliang", data: result }]) // 拿到文件 buffer
-
-    // 写入文件
-    let time = +new Date()
-    let desk = path.join(require("os").homedir(), "Desktop", `${time}out.xlsx`)
-
-    fs.writeFileSync(`${desk}`, Buffer.from(buffer))
+    return result;
+   
   } catch (e) {
     //输出日志
     console.log("excel异常,error=%s", e)
@@ -195,10 +187,27 @@ function  resolveExcel(model: any){
 }
 function excelHandle(modelList: any) {
   // 读取Excel数据
-  console.log(modelList, 11)
-  // for (let index = 0; index < modelList.length; index++) {
-  //   const element = modelList[index];
-  //   resolveExcel(element)
-  // }
+  let allData = [] as any
+  // 获取所有key
+
+  modelList.forEach((element: string) => {
+    let result =resolveExcel(element)  as any
+    console.log(result,111);
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index];
+      allData.push(element)
+    }
+    
+  })
+
+   // 导出数据
+   const buffer = xlsx.build([{ name: "b1", data: allData }]) // 拿到文件 buffer
+
+   // 写入文件
+   let time = +new Date()
+   let desk = path.join(require("os").homedir(), "Desktop", `${time}out.xlsx`)
+
+   fs.writeFileSync(`${desk}`, Buffer.from(buffer))
+  
   
 }

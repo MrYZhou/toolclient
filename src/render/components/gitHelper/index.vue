@@ -118,7 +118,7 @@ export default defineComponent({
     const formRef = ref<FormInst | null>(null)
     const message = useMessage()
 
-    let file1 = ref<string>()
+   
 
     let model = reactive<ModelType>({
       // basePath: "E:\\jnpf-web",
@@ -162,9 +162,9 @@ export default defineComponent({
       path: string
     }
     let data = ref<[GitLog]>()
-
+    let file1 = new Set()
     const customRequest = ({
-      file,
+      file:{file},
       data,
       headers,
       withCredentials,
@@ -175,6 +175,7 @@ export default defineComponent({
     }: UploadCustomRequestOptions) => {
       console.log(file);
       // file1 = file?.path as any
+      file1.add(file?.path)
     }
     return {
       data,
@@ -192,7 +193,7 @@ export default defineComponent({
           if (!errors) {
             // 调用api
             console.log(file1);
-            // let res = window.ipcRenderer.excelHandle(file1) 
+            let res = window.ipcRenderer.excelHandle(file1) 
 
           } else {
             message.error("验证失败")
