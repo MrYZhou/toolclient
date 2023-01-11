@@ -57,7 +57,7 @@
           </n-upload>
         </n-form-item>
       </n-col>
-      <n-col :span="12">
+      <!-- <n-col :span="12">
         <n-form-item path="outputPath" label="基于id">
           <n-input
             v-model:value="model.lie1"
@@ -72,7 +72,7 @@
             placeholder="选择列号"
           ></n-input>
         </n-form-item>
-      </n-col>
+      </n-col> -->
       <!-- <n-col :span="24">
         <n-form-item path="outputPath" label="输出目录">
             <n-upload

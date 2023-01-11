@@ -5,9 +5,7 @@
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
-    "ee2":"pnpm main:build  && electron .",
-    "ee": "concurrently \"pnpm main:build\"  \"electron .\"",
-    "electron:devlazy": "concurrently  \"pnpm main:build\" \"electron .\" \"pnpm vite\"",
+    "client": "pnpm main:build  && electron .",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
     "main:build": "tsc -p  src/main --outDir distMain",
     "render:build": "vue-tsc --noEmit && vite build",
@@ -37,6 +35,7 @@
     "concurrently": "^7.0.0",
     "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
+    "electron-reloader": "^1.2.3",
     "eslint-plugin-vue": "^8.5.0",
     "naive-ui": "^2.27.0",
     "typescript": "^4.5.4",
