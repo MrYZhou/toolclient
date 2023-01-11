@@ -56,7 +56,7 @@ const menuOptions: MenuOption[] = [
   //   key: "jsonParser",
   // },
   {
-    label: "git工具",
+    label: "excel工具",
     component: gitHelper,
     key: "gitHelper",
   },

@@ -74,7 +74,7 @@ ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
 // excel处理
 ipcMain.on("excelHandle", (event: Electron.IpcMainEvent, ...args) => {
   let model = args[0]
-  excelHandle(model)
+  excelHandle(model.file,model.lie1,model.lie2)
   event.returnValue = ""
 })
 
@@ -144,41 +144,30 @@ app.on("window-all-closed", () => {
   }
 })
 function combineResult(result:any,lie1:number,lie2:number){
-  let result = []
   try {
     let map: Map<string, any> = new Map()
-    let tableData = xlsx.parse(model)
-    console.log(tableData, 112)
-    //循环读取表数据
-    for (let val in tableData) {
-      //下标数据
-      let itemData = tableData[val]
-      //循环读取用户表数据
-      console.log(itemData.data, 333)
-      let array = itemData.data
-      if(index==0){
-        result.push(array[0])
-      }
-      
-      for (let index = 1; index < array.length; index++) {
-        const element = array[index]
-        let id = element[lie1] as string
+    let totalData = []
+    for (let index = 1; index < result.length; index++) {
+      const element = result[index]
+      let id = element[lie1] as string
 
-        let item = map.get(id)
-        let price = 0
-        if(item){
-          console.log(item,2345);
-          price = item[lie2]
-        }
-        
-        element[lie2] = price + Number.parseFloat(element[lie2])
-        console.log(map,element,288);
-        map.set(id, element)
+      let item = map.get(id)
+      let price = 0
+      if(item){
+        console.log(item,2345);
+        price = item[lie2]
       }
+      let price2 = new Number(element[lie2])
+      if(price2.toString() == 'NaN'){
+        price2 = 0
+      }
+      console.log(price,"价格");
+      element[lie2] = price + Number(price2)
+      // console.log(map,element,288);
+      map.set(id, element)
     }
 
     map.forEach(k=>{
-      console.log(k,321343124);
       result.push(k)
     })
     return result;
@@ -199,33 +188,19 @@ function  resolveExcel(model: any,index :number,lie1:number,lie2:number){
       //下标数据
       let itemData = tableData[val]
       //循环读取用户表数据
-      console.log(itemData.data, 333)
+      console.log(itemData.data, 333,val)
       let array = itemData.data
+
       if(index==0){
         result.push(array[0])
       }
       
       for (let index = 1; index < array.length; index++) {
         const element = array[index]
-        let id = element[lie1] as string
-
-        let item = map.get(id)
-        let price = 0
-        if(item){
-          console.log(item,2345);
-          price = item[lie2]
-        }
-        
-        element[lie2] = price + Number.parseFloat(element[lie2])
-        console.log(map,element,288);
-        map.set(id, element)
+        result.push(element)
       }
     }
 
-    map.forEach(k=>{
-      console.log(k,321343124);
-      result.push(k)
-    })
     return result;
    
   } catch (e) {
@@ -246,16 +221,17 @@ function excelHandle(modelList: any,lie1:number,lie2:number) {
       const element = result[index];
       allData.push(element)
     }
-    
   })
 
+  let totalData = combineResult(allData,lie1,lie2)
+  console.log(totalData,"最终数据");
    // 导出数据
-   const buffer = xlsx.build([{ name: "b1", data: allData }]) // 拿到文件 buffer
+   const buffer = xlsx.build([{ name: "b1", data: totalData }]) // 拿到文件 buffer
 
    // 写入文件
    let time = +new Date()
    let desk = path.join(require("os").homedir(), "Desktop", `${time}out.xlsx`)
-
+    console.log(desk,"保存目录");
    fs.writeFileSync(`${desk}`, Buffer.from(buffer))
   
   
