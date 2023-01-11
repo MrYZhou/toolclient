@@ -5,8 +5,8 @@
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
-    "elec":"electron .",
-    "electron:dev": "concurrently vite \"pnpm main:build\"  \"electron .\"",
+    "ee2":"pnpm main:build  && electron .",
+    "ee": "concurrently \"pnpm main:build\"  \"electron .\"",
     "electron:devlazy": "concurrently  \"pnpm main:build\" \"electron .\" \"pnpm vite\"",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
     "main:build": "tsc -p  src/main --outDir distMain",

@@ -154,8 +154,8 @@ export default defineComponent({
       // basePath: "E:\\jnpf-web",
       basePath: "C:\\Users\\JNPF\\Desktop\\toolbox",
       outputPath: "",
-      lie1:"",
-      lie2:"",
+      lie1:0,
+      lie2:0,
     })
     onMounted(() => {
       // 绑定监听

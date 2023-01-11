@@ -48,7 +48,7 @@ function createWindow() {
   // win.setAspectRatio(1.6);
 
   // 判断开发环境还是打包环境
-  if (process.env.npm_lifecycle_event == "electron:dev") {
+  if (process.env.npm_lifecycle_event == "ee") {
     win.loadURL("http://localhost:3010")
 
     win.webContents.openDevTools()
