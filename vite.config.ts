@@ -37,8 +37,8 @@ export default defineConfig({
   // 基础访问路径
   base: "./",
   server: {
-    host: "0.0.0.0",
-    port: 3000,
+    host: "127.0.0.1",
+    port: 3010,
     open: false,
     strictPort: false,
     proxy: {

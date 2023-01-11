@@ -49,7 +49,7 @@ function createWindow() {
 
   // 判断开发环境还是打包环境
   if (process.env.npm_lifecycle_event == "electron:dev") {
-    win.loadURL("http://localhost:3000")
+    win.loadURL("http://localhost:3010")
 
     win.webContents.openDevTools()
   } else {
@@ -143,7 +143,7 @@ app.on("window-all-closed", () => {
     app.quit()
   }
 })
-function  resolveExcel(model: any){
+function combineResult(result:any,lie1:number,lie2:number){
   let result = []
   try {
     let map: Map<string, any> = new Map()
@@ -156,19 +156,22 @@ function  resolveExcel(model: any){
       //循环读取用户表数据
       console.log(itemData.data, 333)
       let array = itemData.data
-      result.push(array[0])
+      if(index==0){
+        result.push(array[0])
+      }
+      
       for (let index = 1; index < array.length; index++) {
         const element = array[index]
-        let id = element[0] as string
+        let id = element[lie1] as string
 
         let item = map.get(id)
         let price = 0
         if(item){
           console.log(item,2345);
-          price = item[2]
+          price = item[lie2]
         }
         
-        element[2] = price + Number.parseFloat(element[2])
+        element[lie2] = price + Number.parseFloat(element[lie2])
         console.log(map,element,288);
         map.set(id, element)
       }
@@ -185,14 +188,60 @@ function  resolveExcel(model: any){
     console.log("excel异常,error=%s", e)
   }
 }
-function excelHandle(modelList: any) {
+function  resolveExcel(model: any,index :number,lie1:number,lie2:number){
+  let result = []
+  try {
+    let map: Map<string, any> = new Map()
+    let tableData = xlsx.parse(model)
+    console.log(tableData, 112)
+    //循环读取表数据
+    for (let val in tableData) {
+      //下标数据
+      let itemData = tableData[val]
+      //循环读取用户表数据
+      console.log(itemData.data, 333)
+      let array = itemData.data
+      if(index==0){
+        result.push(array[0])
+      }
+      
+      for (let index = 1; index < array.length; index++) {
+        const element = array[index]
+        let id = element[lie1] as string
+
+        let item = map.get(id)
+        let price = 0
+        if(item){
+          console.log(item,2345);
+          price = item[lie2]
+        }
+        
+        element[lie2] = price + Number.parseFloat(element[lie2])
+        console.log(map,element,288);
+        map.set(id, element)
+      }
+    }
+
+    map.forEach(k=>{
+      console.log(k,321343124);
+      result.push(k)
+    })
+    return result;
+   
+  } catch (e) {
+    //输出日志
+    console.log("excel异常,error=%s", e)
+  }
+}
+function excelHandle(modelList: any,lie1:number,lie2:number) {
   // 读取Excel数据
   let allData = [] as any
   // 获取所有key
-
+  let index = 0
   modelList.forEach((element: string) => {
-    let result =resolveExcel(element)  as any
+    let result =resolveExcel(element,index,lie1,lie2)  as any
     console.log(result,111);
+    index++
     for (let index = 0; index < result.length; index++) {
       const element = result[index];
       allData.push(element)
