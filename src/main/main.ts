@@ -29,7 +29,7 @@ let win: BrowserWindow = null as any
 function createWindow() {
   win = new BrowserWindow({
     width: 1000,
-    height: 600,
+    height: 700,
     transparent: true,
     // resizable: false,
     frame: false,
@@ -47,7 +47,7 @@ function createWindow() {
 
   // 判断开发环境还是打包环境
   if (process.env.npm_lifecycle_event == "client") {
-    win.loadURL("http://localhost:3010")
+    win.loadURL("http://127.0.0.1:3010")
 
     win.webContents.openDevTools()
   } else {
@@ -71,11 +71,16 @@ ipcMain.on("sendGitLogSolve", async (event: Electron.IpcMainEvent, ...args) => {
 
 // excel处理
 ipcMain.on("excelHandle", (event: Electron.IpcMainEvent, ...args) => {
-  console.log(12112)
-  event.returnValue = ""
-  return
   let model = args[0]
-  excelHandle(model.file, model.lie1, model.lie2)
+  console.log("命令开始")
+  excelHandle2(
+    model.file,
+    model.file2,
+    model.lie1,
+    model.lie2,
+    model.lie3,
+    model.lie4
+  )
   event.returnValue = ""
 })
 
@@ -133,7 +138,7 @@ app.whenReady().then(() => {
     let path = decodeURI(url.split("?")[0])
     callback(path)
   })
-  
+
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
@@ -146,7 +151,7 @@ app.on("window-all-closed", () => {
     app.quit()
   }
 })
-function combineResult(result: any, lie1: number, lie2: number) {
+function combineResult(result: any, lie1: any, lie2: any) {
   try {
     let map: Map<string, any> = new Map()
     let totalData = []
@@ -179,7 +184,84 @@ function combineResult(result: any, lie1: number, lie2: number) {
     console.log("excel异常,error=%s", e)
   }
 }
-function resolveExcel(model: any, index: number, lie1: number, lie2: number) {
+// 得到生成的数据
+function resolveExcelTargetData(
+  model: any,
+  lie1: any,
+  lie2: any,
+  baseMap: any
+) {
+  let result = []
+  try {
+    let map: Map<string, any> = new Map()
+    let sku = new Set<string>()
+    let tableData = xlsx.parse(model)
+    //循环读取表数据,有可能一张表有2个ecxel
+    for (let val in tableData) {
+      //下标数据
+      let itemData = tableData[val]
+      let array = itemData.data
+      result.push(array[0])
+      let index1 = getIndex(array[0], lie1)
+
+      for (let index = 1; index < array.length; index++) {
+        const element = array[index]
+        
+        sku.add(element[index1])
+      }
+    }
+
+    sku.forEach((k) => {
+      result.push([k, baseMap.get(k)])
+    })
+    return result
+  } catch (e) {}
+}
+function getIndex(array: any, lie: any) {
+  // 生成下标对应的关系
+  let titleIndex = 0
+  let number = new Number(lie)
+  if(number.toString() == 'NaN'){
+    for (let index = 0; index < array.length; index++) {
+      const element = array[index]
+      if (element == lie) {
+        titleIndex = index
+      }
+    }
+  }else{
+    titleIndex = lie - 1
+  }
+  
+  return titleIndex
+}
+// 得到初始化的skuid和价格的关系
+function resolveExcelMap(model: any, lie1: any, lie2: any) {
+  try {
+    let map: Map<string, any> = new Map()
+    let tableData = xlsx.parse(model)
+    console.log(tableData, 112)
+    //循环读取表数据
+    for (let val in tableData) {
+      //下标数据
+      let itemData = tableData[val]
+      //循环读取用户表数据
+      console.log(itemData.data, 333, val)
+      let array = itemData.data
+
+      let index1 = getIndex(array[0], lie1)
+      let index2 = getIndex(array[0], lie2)
+      console.log(index1,index2,'列信息');
+
+      for (let index = 1; index < array.length; index++) {
+        const element = array[index]
+        map.set(element[index1], element[index2])
+      }
+    }
+
+    return map
+  } catch (e) {}
+}
+function resolveExcel(model: any, index: any, lie1: any, lie2: any) {
   let result = []
   try {
     let map: Map<string, any> = new Map()
@@ -209,7 +291,7 @@ function resolveExcel(model: any, index: number, lie1: number, lie2: number) {
     console.log("excel异常,error=%s", e)
   }
 }
-function excelHandle(modelList: any, lie1: number, lie2: number) {
+function excelHandle(modelList: any, lie1: any, lie2: any) {
   // 读取Excel数据
   let allData = [] as any
   // 获取所有key
@@ -228,6 +310,45 @@ function excelHandle(modelList: any, lie1: number, lie2: number) {
   console.log(totalData, "最终数据")
   // 导出数据
   const buffer = xlsx.build([{ name: "b1", data: totalData }]) // 拿到文件 buffer
+
+  // 写入文件
+  let time = +new Date()
+  let desk = path.join(require("os").homedir(), "Desktop", `${time}out.xlsx`)
+  console.log(desk, "保存目录")
+  fs.writeFileSync(`${desk}`, Buffer.from(buffer))
+}
+
+// 处理字段转移
+function excelHandle2(
+  base: any,
+  target: any,
+  lie1: any,
+  lie2: any,
+  lie3: any,
+  lie4: any
+) {
+  // 读取Excel数据
+  console.log(base, lie1, lie2)
+  let map = resolveExcelMap(base, lie1, lie2) as any
+  
+  // 保存的数据
+  let totalData = resolveExcelTargetData(target, lie3, lie4, map) as any
+  console.log(totalData, "最终数据")
+
+  // 列宽设置
+  let width =[]
+  let length = totalData[0].length
+  for (let i = 0; i < totalData.length; i++){
+    let item = totalData[i]
+    width.push({ wch: item.length+1})
+  }
+  console.log(width,'宽度');
+  const sheetOptions = {
+    '!cols':width
+  }
+
+  // 导出数据
+  const buffer = xlsx.build([{ name: "b1", data: totalData }],{sheetOptions}) // 拿到文件 buffer
 
   // 写入文件
   let time = +new Date()

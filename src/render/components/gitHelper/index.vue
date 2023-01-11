@@ -7,38 +7,13 @@
     label-width="auto"
   >
     <n-row :gutter="12">
-      <!-- <n-col :span="24">
+      <n-col :span="24">
         <n-form-item path="basePath" label="excel1">
           <n-upload
             multiple
             directory-dnd
             action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-            :max="5"
-          >
-            <n-upload-dragger>
-              <div style="margin-bottom: 12px">
-                <n-icon size="40">
-                  <CloudUploadOutline></CloudUploadOutline>
-                </n-icon>
-              </div>
-              <n-text style="font-size: 16px">
-                点击或者拖动文件到该区域来上传
-              </n-text>
-              <n-p depth="3" style="margin: 8px 0 0 0">
-                请不要上传敏感数据，比如你的银行卡号和密码，信用卡号有效期和安全码
-              </n-p>
-            </n-upload-dragger>
-          </n-upload>
-        </n-form-item>
-      </n-col> -->
-
-      <n-col :span="24">
-        <n-form-item path="outputPath2" label="excel">
-          <n-upload
-            multiple
-            directory-dnd
-            action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-            :max="2"
+            :max="1"
             :custom-request="customRequest"
           >
             <n-upload-dragger>
@@ -57,19 +32,62 @@
           </n-upload>
         </n-form-item>
       </n-col>
-      <!-- <n-col :span="12">
-        <n-form-item path="outputPath" label="基于id">
+      <n-col :span="12">
+        <n-form-item path="outputPath" label="excel1-sku">
           <n-input
-            v-model:value="model.lie1"
-            placeholder="选择列号"
+            v-model:value="(model.lie1 as any)"
+            placeholder="选择列"
           ></n-input>
         </n-form-item>
       </n-col>
       <n-col :span="12">
-        <n-form-item path="outputPath" label="计算价格">
+        <n-form-item path="outputPath" label="excel1-price">
           <n-input
-            v-model:value="model.lie2"
-            placeholder="选择列号"
+            v-model:value="(model.lie2 as any)"
+            placeholder="选择列"
+          ></n-input>
+        </n-form-item>
+      </n-col>
+
+      <n-col :span="24">
+        <n-form-item path="outputPath2" label="excel2">
+          <n-upload
+            multiple
+            draggable
+            directory-dnd
+            action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+            :max="1"
+            :custom-request="customRequest2"
+          >
+            <n-upload-dragger>
+              <div style="margin-bottom: 12px">
+                <n-icon size="40">
+                  <CloudUploadOutline></CloudUploadOutline>
+                </n-icon>
+              </div>
+              <n-text style="font-size: 16px">
+                点击或者拖动文件到该区域来上传
+              </n-text>
+              <n-p depth="3" style="margin: 8px 0 0 0">
+                请不要上传敏感数据，比如你的银行卡号和密码，信用卡号有效期和安全码
+              </n-p>
+            </n-upload-dragger>
+          </n-upload>
+        </n-form-item>
+      </n-col>
+      <n-col :span="12">
+        <n-form-item path="outputPath" label="excel2-sku">
+          <n-input
+            v-model:value="(model.lie3 as any)"
+            placeholder="选择列"
+          ></n-input>
+        </n-form-item>
+      </n-col>
+      <!-- <n-col :span="12">
+        <n-form-item path="outputPath" label="excel2-price">
+          <n-input
+            v-model:value="(model.lie4 as any)"
+            placeholder="选择列"
           ></n-input>
         </n-form-item>
       </n-col> -->
@@ -83,7 +101,7 @@
               default-upload
               :custom-request="customRequest2"
             ><n-input
-                  v-model:value="model.outputPath"
+                  v-model:value:value="model.outputPath"
                   placeholder="默认保存在桌面"
                 ></n-input
               >
@@ -138,8 +156,10 @@ import { CloudUploadOutline } from "@vicons/ionicons5"
 interface ModelType {
   basePath: string | null
   outputPath: string | null
-  lie1:number | null,
-  lie2:number | null,
+  lie1: number | string | null
+  lie2: number | string | null
+  lie3: number | string | null
+  lie4: number | string | null
 }
 
 export default defineComponent({
@@ -154,8 +174,10 @@ export default defineComponent({
       // basePath: "E:\\jnpf-web",
       basePath: "C:\\Users\\JNPF\\Desktop\\toolbox",
       outputPath: "",
-      lie1:0,
-      lie2:0,
+      lie1: 2,
+      lie2: 3,
+      lie3: 1,
+      lie4: 2,
     })
     onMounted(() => {
       // 绑定监听
@@ -191,34 +213,21 @@ export default defineComponent({
       path: string
     }
     let data = ref<[GitLog]>()
-    let file1 = new Set()
-    const customRequest = ({
-      file: { file },
-      data,
-      headers,
-      withCredentials,
-      action,
-      onFinish,
-      onError,
-      onProgress,
-    }: UploadCustomRequestOptions) => {
+    let file1 = ref<"">()
+    let file2 = ref<"">()
+    const customRequest = ({ file: { file } }: UploadCustomRequestOptions) => {
       console.log(file)
-      // file1 = file?.path as any
-      file1.add(file?.path)
+      file1 = file?.path as any
+      // file1.add(file?.path)
     }
 
-    const customRequest2 = ({
-      file,
-      data,
-      headers,
-      withCredentials,
-      action,
-      onFinish,
-      onError,
-      onProgress,
-    }: UploadCustomRequestOptions) => {
-      console.log(file, data, headers, 34)
+    const customRequest2 = ({ file: { file } }: UploadCustomRequestOptions) => {
+      console.log(file)
+      file2 = file?.path as any
+      // file2.add(file?.path)
     }
+
+    const customRequestBase = ({ file }: UploadCustomRequestOptions) => {}
     return {
       data,
       customRequest,
@@ -235,14 +244,16 @@ export default defineComponent({
           if (!errors) {
             // 调用api
             console.log(file1)
-            let fileInfo  ={
-              file:file1,
-              lie1:model.lie1,
-              lie2:model.lie2,
+            let fileInfo = {
+              file: file1,
+              file2: file2,
+              lie1: model.lie1,
+              lie2: model.lie2,
+              lie3: model.lie3,
+              lie4: model.lie4,
             }
-            fileInfo.file = ["D:\\Users\\JNPF\\Desktop\\1.xlsx"] as any
-            fileInfo.lie1 =fileInfo.lie1? fileInfo.lie1 -1:0
-            fileInfo.lie2 =fileInfo.lie2? fileInfo.lie2-1:0
+            // fileInfo.file = ["C:\\Users\\lg\\Desktop\\1.xls"] as any
+            // fileInfo.file2 = ["C:\\Users\\lg\\Desktop\\销售价.xlsx"] as any
             let res = window.ipcRenderer.excelHandle(fileInfo)
           } else {
             message.error("验证失败")
