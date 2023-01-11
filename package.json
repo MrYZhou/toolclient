@@ -5,7 +5,7 @@
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
-    "client": "pnpm main:build  && electron .",
+    "client": "chcp 65001 && pnpm main:build  && electron .",
     "build": "pnpm render:build && pnpm main:build && pnpm package",
     "main:build": "tsc -p  src/main --outDir distMain",
     "render:build": "vue-tsc --noEmit && vite build",
