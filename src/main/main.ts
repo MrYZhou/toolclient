@@ -29,7 +29,7 @@ let win: BrowserWindow = null as any
 function createWindow() {
   win = new BrowserWindow({
     width: 1000,
-    height: 700,
+    height: 800,
     transparent: true,
     // resizable: false,
     frame: false,

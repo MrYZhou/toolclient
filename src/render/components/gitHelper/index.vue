@@ -53,7 +53,6 @@
         <n-form-item path="outputPath2" label="excel2">
           <n-upload
             multiple
-            draggable
             directory-dnd
             action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
             :max="1"
