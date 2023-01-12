@@ -27,7 +27,7 @@
           @update:value="handleUpdateValue"
         />
       </n-layout-sider>
-      <n-layout content-style="padding: 24px;">
+      <n-layout content-style="padding: 24px;" class="viewContent">
         <component :is="componentName"></component>
       </n-layout>
     </n-layout>
@@ -35,13 +35,13 @@
 </template>
 
 <script lang="ts" setup>
-import { MenuOption, NIcon, useMessage } from "naive-ui";
-import { BookOutline as BookIcon, CaretDownOutline } from "@vicons/ionicons5";
-import jsonParser from "@/render/components/json-parse/index.vue";
-import gitHelper from "@/render/components/gitHelper/index.vue";
-import sse from "@/render/components/sse/index.vue";
-import { useRouter } from "vue-router";
-import { Ref } from "vue";
+import { MenuOption, NIcon, useMessage } from "naive-ui"
+import { BookOutline as BookIcon, CaretDownOutline } from "@vicons/ionicons5"
+import jsonParser from "@/render/components/json-parse/index.vue"
+import gitHelper from "@/render/components/gitHelper/index.vue"
+import sse from "@/render/components/sse/index.vue"
+import { useRouter } from "vue-router"
+import { Ref } from "vue"
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 
 const menuOptions: MenuOption[] = [
@@ -107,35 +107,45 @@ const menuOptions: MenuOption[] = [
   //     },
   //   ],
   // },
-];
-let componentName: Ref<string> = shallowRef("");
-componentName.value = gitHelper as any;
-let collapsed = ref(false);
+]
+let componentName: Ref<string> = shallowRef("")
+componentName.value = gitHelper as any
+let collapsed = ref(false)
 
 const handleUpdateValue = (key: string, item: MenuOption) => {
-  return (componentName.value = item.component as any);
-};
+  return (componentName.value = item.component as any)
+}
 const renderMenuLabel = (option: MenuOption) => {
   if ("href" in option) {
     return h(
       "a",
       { href: option.href, target: "_blank" },
       option.label as string
-    );
+    )
   }
-  return option.label as string;
-};
+  return option.label as string
+}
 const renderMenuIcon = (option: MenuOption) => {
   // 渲染图标占位符以保持缩进
-  if (option.key === "sheep-man") return true;
+  if (option.key === "sheep-man") return true
   // 返回 false 值，不再渲染图标及占位符
-  if (option.key === "food") return null;
+  if (option.key === "food") return null
   // 渲染图标
-  return h(NIcon, null, { default: () => h(BookIcon) });
-};
+  return h(NIcon, null, { default: () => h(BookIcon) })
+}
 // 默认展开
 // defaultExpandedKeys: ['fish', 'braise'],
 const expandIcon = () => {
-  return h(NIcon, null, { default: () => h(CaretDownOutline) });
-};
+  return h(NIcon, null, { default: () => h(CaretDownOutline) })
+}
 </script>
+
+<style>
+.viewContent {
+  height: 600px;
+  overflow: scroll;
+}
+.viewContent::-webkit-scrollbar {
+  display: none;
+}
+</style>

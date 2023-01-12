@@ -105,13 +105,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref } from "vue";
-import { NConfigProvider } from "naive-ui";
-import { zhCN, dateZhCN } from "naive-ui";
-import { darkTheme } from "naive-ui";
-import { BuiltInGlobalTheme } from "naive-ui/lib/themes/interface";
+import { defineComponent, Ref } from "vue"
+import { NConfigProvider } from "naive-ui"
+import { zhCN, dateZhCN } from "naive-ui"
+import { darkTheme } from "naive-ui"
+import { BuiltInGlobalTheme } from "naive-ui/lib/themes/interface"
 
-import { Sunny, CloudyNight } from "@vicons/ionicons5";
+import { Sunny, CloudyNight } from "@vicons/ionicons5"
 
 export default defineComponent({
   components: {
@@ -120,22 +120,22 @@ export default defineComponent({
     CloudyNight,
   },
   setup() {
-    const app = inject('app')
-    console.log(app);
-    let theme: Ref<null | BuiltInGlobalTheme> = ref(null);
+    const app = inject("app")
+    console.log(app)
+    let theme: Ref<null | BuiltInGlobalTheme> = ref(null)
     const change = (val: boolean) => {
-      theme.value = val ? null : darkTheme;
-    };
+      theme.value = val ? null : darkTheme
+    }
     const min = () => {
-      console.log("min");
-      window.ipcRenderer.windowHan("min");
-    };
+      console.log("min")
+      window.ipcRenderer.windowHan("min")
+    }
     const max = () => {
-      window.ipcRenderer.windowHan("max");
-    };
+      window.ipcRenderer.windowHan("max")
+    }
     const close = () => {
-      window.ipcRenderer.windowHan("close");
-    };
+      window.ipcRenderer.windowHan("close")
+    }
     return {
       zhCN,
       dateZhCN,
@@ -148,20 +148,21 @@ export default defineComponent({
       theme,
       Sunny,
       CloudyNight,
-    };
+    }
   },
-});
+})
 </script>
 <style scoped>
 #box {
+  border-radius: 10px;
+  /* box-shadow: 10px 10px 100px 10px rgba(0,0,0,0.5); */
+  /* -webkit-app-region: drag; */
   position: relative;
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   padding-bottom: 20px;
-  /* line-height: 30px; */
-  /* text-align: center; */
 }
 #box::-webkit-scrollbar {
   display: none;
@@ -187,13 +188,48 @@ export default defineComponent({
 }
 #body {
   position: absolute;
+  /* -webkit-app-region: drag; */
   /* z-index: 9990; */
   width: 100%;
+  /* height: 50vh; */
   top: 36px;
+  overflow: scroll;
   /* border: 1px solid red; */
+}
+#body::-webkit-scrollbar {
+  display: none;
 }
 .main-content {
   z-index: 99;
   height: 100%;
+  overflow: hidden;
+}
+</style>
+<style>
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: 0 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #61a8df;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #37dace;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #17bbaf;
 }
 </style>

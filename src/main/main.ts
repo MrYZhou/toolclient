@@ -34,6 +34,7 @@ function createWindow() {
     // resizable: false,
     frame: false,
     titleBarStyle: "customButtonsOnHover",
+    backgroundColor: "#00000000",
     webPreferences: {
       // devTools: false, //不开启调试
       preload: path.join(__dirname, "preload.js"),
@@ -206,7 +207,7 @@ function resolveExcelTargetData(
 
       for (let index = 1; index < array.length; index++) {
         const element = array[index]
-        
+
         sku.add(element[index1])
       }
     }
@@ -221,17 +222,17 @@ function getIndex(array: any, lie: any) {
   // 生成下标对应的关系
   let titleIndex = 0
   let number = new Number(lie)
-  if(number.toString() == 'NaN'){
+  if (number.toString() == "NaN") {
     for (let index = 0; index < array.length; index++) {
       const element = array[index]
       if (element == lie) {
         titleIndex = index
       }
     }
-  }else{
+  } else {
     titleIndex = lie - 1
   }
-  
+
   return titleIndex
 }
 // 得到初始化的skuid和价格的关系
@@ -250,7 +251,7 @@ function resolveExcelMap(model: any, lie1: any, lie2: any) {
 
       let index1 = getIndex(array[0], lie1)
       let index2 = getIndex(array[0], lie2)
-      console.log(index1,index2,'列信息');
+      console.log(index1, index2, "列信息")
 
       for (let index = 1; index < array.length; index++) {
         const element = array[index]
@@ -330,25 +331,25 @@ function excelHandle2(
   // 读取Excel数据
   console.log(base, lie1, lie2)
   let map = resolveExcelMap(base, lie1, lie2) as any
-  
+
   // 保存的数据
   let totalData = resolveExcelTargetData(target, lie3, lie4, map) as any
   console.log(totalData, "最终数据")
 
   // 列宽设置
-  let width =[]
+  let width = []
   let length = totalData[0].length
-  for (let i = 0; i < totalData.length; i++){
+  for (let i = 0; i < totalData.length; i++) {
     let item = totalData[i]
-    width.push({ wch: item.length+1})
+    width.push({ wch: item.length + 1 })
   }
-  console.log(width,'宽度');
+  console.log(width, "宽度")
   const sheetOptions = {
-    '!cols':width
+    "!cols": width,
   }
 
   // 导出数据
-  const buffer = xlsx.build([{ name: "b1", data: totalData }],{sheetOptions}) // 拿到文件 buffer
+  const buffer = xlsx.build([{ name: "b1", data: totalData }], { sheetOptions }) // 拿到文件 buffer
 
   // 写入文件
   let time = +new Date()

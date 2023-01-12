@@ -1,7 +1,7 @@
 {
   "name": "toolbox",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.5.0",
   "main": "distMain/main.js",
   "scripts": {
     "dev": "vite",
@@ -46,9 +46,13 @@
     "vue-tsc": "^0.29.8",
     "windicss": "^3.5.1"
   },
+  "********":{
+    "build":{"windows":"windwos:"}
+  },
   "build": {
     "appId": "com.toolbox.app",
     "win": {
+      "icon": "build/icons/icon.ico",
       "target": [
         "nsis",
         "zip"
