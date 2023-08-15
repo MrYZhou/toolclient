@@ -78,14 +78,14 @@ const gitLog = (model: Model) => {
 
               generateFile(result, sourceDir, outputPath)
                 .then((res) => {
-                  webContents
-                    .getFocusedWebContents()
-                    .send("handleGitFileComplete", 1);
+                  
+                  webContents?.getFocusedWebContents()
+                  ?.send("handleGitFileComplete", 1);
+                   
                 })
                 .catch((e) => {
-                  webContents
-                    .getFocusedWebContents()
-                    .send("handleGitFileComplete", 2);
+                  webContents?.getFocusedWebContents()
+                  ?.send("handleGitFileComplete", 2);
                 });
             }
             let data ={

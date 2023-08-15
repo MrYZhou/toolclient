@@ -28,3 +28,4 @@ electron
 pnpm-lock.yaml
 distMain/*
 src/render/components.d.ts
+src/render/auto-imports.d.ts
