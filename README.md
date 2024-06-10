@@ -31,15 +31,9 @@ npm set registry https://registry.npmmirror.com
 1.  pnpm dev 启动web页面
 2.  pnpm electron:dev 启动桌面app
 3.  pnpm build 打包桌面app
-4.  render:build 打包web页面
+4.  pnpm render:build 打包web页面
 #### 参考文档
 https://cn.vitejs.dev/
 https://www.electronjs.org/zh/docs/latest
 https://v3.cn.vuejs.org/guide/introduction.html
 https://www.naiveui.com/zh-CN/os-theme?from=thosefree.com
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
